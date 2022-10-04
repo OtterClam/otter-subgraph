@@ -19,7 +19,7 @@ export class KyberHedgedMaticStMaticInvestment implements InvestmentInterface {
       this.active = true
       let nav = this.netAssetValue()
       if (nav.gt(BigDecimal.fromString('10'))) {
-        let _investment = loadOrCreateInvestment(this.strategy, transaction.timestamp)
+        let _investment = loadOrCreateInvestment(this.strategy, this.protocol, transaction.timestamp)
         _investment.protocol = this.protocol
         _investment.netAssetValue = nav
         this.investment = _investment

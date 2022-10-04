@@ -1077,7 +1077,7 @@ dataSources:
     source:
       address: '0xc250e9987a032acac293d838726c511e6e1c029d'
       abi: OtterClamERC20V2
-      startBlock: 31091825 #26991825 #First burn transfer
+      startBlock: 26991825 #First burn transfer
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5

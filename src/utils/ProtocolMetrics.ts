@@ -82,6 +82,7 @@ import {
   UNIV3_HEDGED_MATIC_USDC_STRATEGY,
   PENROSE_HEDGED_MATIC_STRATEGY,
   PENROSE_HEDGE_START_BLOCK,
+  USDPLUS_STMATIC_PENROSE_USER_PROXY,
 } from './Constants'
 import { dayFromTimestamp } from './Dates'
 import { toDecimal } from './Decimals'
@@ -399,16 +400,6 @@ function setTreasuryAssetMarketValues(transaction: Transaction, protocolMetric: 
       DYSTOPIA_PAIR_USDPLUS_USDC,
     )
 
-    //usd+/stMatic
-    let usdStMaticDystPair = DystPair.bind(DYSTOPIA_PAIR_USDPLUS_STMATIC).try_balanceOf(DAO_WALLET)
-    if (!usdStMaticDystPair.reverted) {
-      usdplusStMaticValue = getDystPairUSD(
-        transaction.blockNumber,
-        usdStMaticDystPair.value,
-        DYSTOPIA_PAIR_USDPLUS_STMATIC,
-      )
-    }
-
     usdplusStMaticValue = usdplusStMaticValue.plus(
       getPenroseRewardBalance(transaction.blockNumber, PENROSE_REWARD_USDPLUS_STMATIC, DYSTOPIA_PAIR_USDPLUS_STMATIC),
     )
@@ -481,6 +472,28 @@ function setTreasuryAssetMarketValues(transaction: Transaction, protocolMetric: 
   let penroseHedgedLpValue = BigDecimal.zero()
   if (transaction.blockNumber.gt(PENROSE_HEDGE_START_BLOCK)) {
     penroseHedgedLpValue = toDecimal(PenroseHedgeLpStrategy.bind(PENROSE_HEDGED_MATIC_STRATEGY).netAssetValue(), 6)
+  }
+
+  //usd+/stMatic
+  let usdStMaticDystPair = DystPair.bind(DYSTOPIA_PAIR_USDPLUS_STMATIC).try_balanceOf(DAO_WALLET)
+  if (!usdStMaticDystPair.reverted) {
+    usdplusStMaticValue = getDystPairUSD(
+      transaction.blockNumber,
+      usdStMaticDystPair.value,
+      DYSTOPIA_PAIR_USDPLUS_STMATIC,
+    )
+  }
+
+  let usdStMaticPenPair = PenroseMultiRewards.bind(PENROSE_REWARD_USDPLUS_STMATIC).try_balanceOf(
+    USDPLUS_STMATIC_PENROSE_USER_PROXY,
+  )
+
+  if (!usdStMaticPenPair.reverted) {
+    usdplusStMaticValue = getDystPairUSD(
+      transaction.blockNumber,
+      usdStMaticPenPair.value,
+      DYSTOPIA_PAIR_USDPLUS_STMATIC,
+    )
   }
 
   let kyberHedgedMaticStMaticValue = new KyberHedgedMaticStMaticInvestment(transaction).netAssetValue()

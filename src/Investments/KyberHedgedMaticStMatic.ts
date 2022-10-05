@@ -9,7 +9,7 @@ export class KyberHedgedMaticStMaticInvestment implements InvestmentInterface {
   public investment!: Investment
   public readonly strategy: string = 'Hedged MATIC/stMATIC'
   public readonly protocol: string = 'Kyberswap'
-  public readonly startBlock: BigInt = BigInt.fromI32(33348683) //actual: 33084754
+  public readonly startBlock: BigInt = BigInt.fromI32(33084754)
   private currentBlock: BigInt = BigInt.zero()
   private active: boolean = false
 

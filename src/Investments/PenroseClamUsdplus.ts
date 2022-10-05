@@ -14,7 +14,7 @@ export class PenroseClamUsdPlusInvestment implements InvestmentInterface {
   public investment!: Investment
   public readonly strategy: string = 'CLAM/USD+'
   public readonly protocol: string = 'Penrose'
-  public readonly startBlock: BigInt = BigInt.fromI32(30393227) //29069971
+  public readonly startBlock: BigInt = BigInt.fromI32(30393227)
   private currentBlock: BigInt = BigInt.zero()
   private active: boolean = false
 

@@ -18,7 +18,7 @@ export class PenrosePartnerPenDystInvestment implements InvestmentInterface {
   public investment!: Investment
   public readonly strategy: string = 'penDYST'
   public readonly protocol: string = 'Penrose'
-  public readonly startBlock: BigInt = BigInt.fromI32(29069971) //29069971
+  public readonly startBlock: BigInt = BigInt.fromI32(29069971)
   private currentBlock: BigInt = BigInt.zero()
   private active: boolean = false
 
@@ -28,7 +28,7 @@ export class PenrosePartnerPenDystInvestment implements InvestmentInterface {
       this.active = true
       let nav = this.netAssetValue()
       if (nav.gt(BigDecimal.fromString('10'))) {
-        let _investment = loadOrCreateInvestment(this.strategy, transaction.timestamp)
+        let _investment = loadOrCreateInvestment(this.strategy, this.protocol, transaction.timestamp)
         _investment.protocol = this.protocol
         _investment.netAssetValue = nav
         this.investment = _investment

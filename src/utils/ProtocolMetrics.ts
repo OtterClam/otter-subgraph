@@ -80,6 +80,9 @@ import {
   DYSTOPIA_veDYST_MATIC_AIRDROP_ID,
   UNIV3_HEDGED_MATIC_USDC_START_BLOCK,
   UNIV3_HEDGED_MATIC_USDC_STRATEGY,
+  PENROSE_HEDGED_MATIC_STRATEGY,
+  PENROSE_HEDGE_START_BLOCK,
+  USDPLUS_STMATIC_PENROSE_USER_PROXY,
 } from './Constants'
 import { dayFromTimestamp } from './Dates'
 import { toDecimal } from './Decimals'
@@ -101,11 +104,12 @@ import {
 import { loadOrCreateTotalBurnedClamSingleton } from '../utils/Burned'
 import { PenroseMultiRewards } from '../../generated/PenrosePartnerRewards/PenroseMultiRewards'
 import { GainsDaiInvestment } from '../Investments/GainsDai'
-import { PenroseHedgedMaticUsdcInvestment } from '../Investments/PenroseHedgedMaticUsdc'
 import { KyberHedgedMaticStMaticInvestment } from '../Investments/KyberHedgedMaticStMatic'
 import { UniV3UsdcMaiInvestment } from '../Investments/UniV3UsdcMai'
 import { IStrategy } from '../../generated/UniV3MaticUsdcHedgedLpStrategy/IStrategy'
 import { UniV3HedgedMaticUsdcInvestment } from '../Investments/UniV3HedgedMaticUsdc'
+import { PenroseHedgeLpStrategy } from '../../generated/OtterClamERC20V2/PenroseHedgeLpStrategy'
+import { DystPair } from '../../generated/OtterClamERC20V2/DystPair'
 
 export function loadOrCreateProtocolMetric(timestamp: BigInt): ProtocolMetric {
   let dayTimestamp = dayFromTimestamp(timestamp)
@@ -396,11 +400,8 @@ function setTreasuryAssetMarketValues(transaction: Transaction, protocolMetric: 
       DYSTOPIA_PAIR_USDPLUS_USDC,
     )
 
-    //usd+/stMatic
-    usdplusStMaticValue = getPenroseRewardBalance(
-      transaction.blockNumber,
-      PENROSE_REWARD_USDPLUS_STMATIC,
-      DYSTOPIA_PAIR_USDPLUS_STMATIC,
+    usdplusStMaticValue = usdplusStMaticValue.plus(
+      getPenroseRewardBalance(transaction.blockNumber, PENROSE_REWARD_USDPLUS_STMATIC, DYSTOPIA_PAIR_USDPLUS_STMATIC),
     )
 
     //plus the locked veDyst inside NFT
@@ -468,7 +469,32 @@ function setTreasuryAssetMarketValues(transaction: Transaction, protocolMetric: 
     usdPlusMarketValue = toDecimal(ERC20.bind(USDPLUS_ERC20).balanceOf(USDPLUS_INVESTMENT_STRATEGY), 6)
   }
 
-  let penroseHedgedLpValue = new PenroseHedgedMaticUsdcInvestment(transaction).netAssetValue()
+  let penroseHedgedLpValue = BigDecimal.zero()
+  if (transaction.blockNumber.gt(PENROSE_HEDGE_START_BLOCK)) {
+    penroseHedgedLpValue = toDecimal(PenroseHedgeLpStrategy.bind(PENROSE_HEDGED_MATIC_STRATEGY).netAssetValue(), 6)
+  }
+
+  //usd+/stMatic
+  let usdStMaticDystPair = DystPair.bind(DYSTOPIA_PAIR_USDPLUS_STMATIC).try_balanceOf(DAO_WALLET)
+  if (!usdStMaticDystPair.reverted) {
+    usdplusStMaticValue = getDystPairUSD(
+      transaction.blockNumber,
+      usdStMaticDystPair.value,
+      DYSTOPIA_PAIR_USDPLUS_STMATIC,
+    )
+  }
+
+  let usdStMaticPenPair = PenroseMultiRewards.bind(PENROSE_REWARD_USDPLUS_STMATIC).try_balanceOf(
+    USDPLUS_STMATIC_PENROSE_USER_PROXY,
+  )
+
+  if (!usdStMaticPenPair.reverted) {
+    usdplusStMaticValue = getDystPairUSD(
+      transaction.blockNumber,
+      usdStMaticPenPair.value,
+      DYSTOPIA_PAIR_USDPLUS_STMATIC,
+    )
+  }
 
   let kyberHedgedMaticStMaticValue = new KyberHedgedMaticStMaticInvestment(transaction).netAssetValue()
 

@@ -14,7 +14,7 @@ export class PenroseClamUsdPlusInvestment implements InvestmentInterface {
   public investment!: Investment
   public readonly strategy: string = 'CLAM/USD+'
   public readonly protocol: string = 'Penrose'
-  public readonly startBlock: BigInt = BigInt.fromI32(30393227) //29069971
+  public readonly startBlock: BigInt = BigInt.fromI32(30393227)
   private currentBlock: BigInt = BigInt.zero()
   private active: boolean = false
 
@@ -24,7 +24,7 @@ export class PenroseClamUsdPlusInvestment implements InvestmentInterface {
       this.active = true
       let nav = this.netAssetValue()
       if (nav.gt(BigDecimal.fromString('10'))) {
-        let _investment = loadOrCreateInvestment(this.strategy, transaction.timestamp)
+        let _investment = loadOrCreateInvestment(this.strategy, this.protocol, transaction.timestamp)
         _investment.protocol = this.protocol
         _investment.netAssetValue = nav
         this.investment = _investment

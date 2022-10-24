@@ -945,6 +945,8 @@ dataSources:
           file: ./abis/IStrategy.json
         - name: UniV3UsdcMaiStrategy
           file: ./abis/UniV3UsdcMaiStrategy.json
+        - name: SandboxLandStaking
+          file: ./abis/SandboxLandStaking.json
         - name: KyberswapMaticStMaticHedgedLpStrategy
           file: ./abis/KyberswapMaticStMaticHedgedLpStrategy.json
         - name: PenroseHedgeLpStrategy
@@ -1127,6 +1129,8 @@ dataSources:
           file: ./abis/IStrategy.json
         - name: UniV3UsdcMaiStrategy
           file: ./abis/UniV3UsdcMaiStrategy.json
+        - name: SandboxLandStaking
+          file: ./abis/SandboxLandStaking.json
         - name: KyberswapMaticStMaticHedgedLpStrategy
           file: ./abis/KyberswapMaticStMaticHedgedLpStrategy.json
         - name: PenroseHedgeLpStrategy

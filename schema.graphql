@@ -57,6 +57,7 @@ type ProtocolMetric @entity {
   treasuryKyberswapMaticStMaticHedgedMarketValue: BigDecimal!
   treasuryUniV3UsdcMaiStrategyMarketValue: BigDecimal!
   treasuryUniV3HedgedMaticUsdcStrategyMarketValue: BigDecimal!
+  treasurySandMarketValue: BigDecimal!
   totalBurnedClam: BigDecimal!
   totalBurnedClamMarketValue: BigDecimal!
   totalClamUsdPlusRebaseValue: BigDecimal!

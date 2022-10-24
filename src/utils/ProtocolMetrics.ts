@@ -1,4 +1,4 @@
-import { Address, BigDecimal, BigInt, log } from '@graphprotocol/graph-ts'
+import { Address, bigDecimal, BigDecimal, BigInt, log } from '@graphprotocol/graph-ts'
 import { ClamCirculatingSupply } from '../../generated/OtterClamERC20V2/ClamCirculatingSupply'
 import { QiFarmV3 } from '../../generated/OtterClamERC20V2/QiFarmV3'
 import { xTetuQi } from '../../generated/OtterClamERC20V2/xTetuQi'
@@ -6,6 +6,7 @@ import { ERC20 } from '../../generated/OtterClamERC20V2/ERC20'
 import { OtterClamERC20V2 } from '../../generated/OtterClamERC20V2/OtterClamERC20V2'
 import { OtterQiDAOInvestment } from '../../generated/OtterClamERC20V2/OtterQiDAOInvestment'
 import { QiFarm } from '../../generated/OtterClamERC20V2/QiFarm'
+import { SandboxLandStaking } from '../../generated/OtterClamERC20V2/SandboxLandStaking'
 import { veDyst } from '../../generated/OtterClamERC20V2/veDyst'
 import { PenLens } from '../../generated/OtterClamERC20V2/PenLens'
 import { UniswapV2Pair } from '../../generated/OtterClamERC20V2/UniswapV2Pair'
@@ -83,6 +84,9 @@ import {
   PENROSE_HEDGED_MATIC_STRATEGY,
   PENROSE_HEDGE_START_BLOCK,
   USDPLUS_STMATIC_PENROSE_USER_PROXY,
+  SANDBOX_LAND_STAKING_START_BLOCK,
+  SANDBOX_LAND_STAKING,
+  OTTER_DEPLOYER,
 } from './Constants'
 import { dayFromTimestamp } from './Dates'
 import { toDecimal } from './Decimals'
@@ -100,6 +104,7 @@ import {
   ReserveToken,
   getUniPairUSD,
   getArrakisPairUSD,
+  getSandUsdRate,
 } from './Price'
 import { loadOrCreateTotalBurnedClamSingleton } from '../utils/Burned'
 import { PenroseMultiRewards } from '../../generated/PenrosePartnerRewards/PenroseMultiRewards'
@@ -502,6 +507,13 @@ function setTreasuryAssetMarketValues(transaction: Transaction, protocolMetric: 
 
   let uniV3HedgedMaticUsdcValue = new UniV3HedgedMaticUsdcInvestment(transaction).netAssetValue()
 
+  // Sandbox
+  let sandboxLandStakeValue = BigDecimal.zero()
+  if (transaction.blockNumber.gt(SANDBOX_LAND_STAKING_START_BLOCK)) {
+    let stakedAmount = SandboxLandStaking.bind(SANDBOX_LAND_STAKING).balanceOf(OTTER_DEPLOYER)
+    sandboxLandStakeValue = toDecimal(stakedAmount, 18).times(getSandUsdRate())
+  }
+
   let stableValueDecimal = maiBalance
     .plus(daiBalance)
     .plus(maiUsdcQiInvestmentValueDecimal)
@@ -543,6 +555,7 @@ function setTreasuryAssetMarketValues(transaction: Transaction, protocolMetric: 
     .plus(penMarketValue)
     .plus(vlPenMarketValue)
     .plus(penDystMarketValue)
+    .plus(sandboxLandStakeValue)
 
   let mv = stableValueDecimal.plus(lpValue_Clam).plus(tokenValues)
   let mv_noClam = stableValueDecimal.plus(lpValue_noClam).plus(tokenValues)
@@ -578,6 +591,7 @@ function setTreasuryAssetMarketValues(transaction: Transaction, protocolMetric: 
   protocolMetric.treasuryKyberswapMaticStMaticHedgedMarketValue = kyberHedgedMaticStMaticValue
   protocolMetric.treasuryUniV3UsdcMaiStrategyMarketValue = uniV3UsdcMaiValue
   protocolMetric.treasuryUniV3HedgedMaticUsdcStrategyMarketValue = uniV3HedgedMaticUsdcValue
+  protocolMetric.treasurySandMarketValue = sandboxLandStakeValue
 
   return protocolMetric
 }

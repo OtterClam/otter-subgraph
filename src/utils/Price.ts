@@ -276,7 +276,7 @@ export function findPrice(blockNumber: BigInt, address: Address): BigDecimal {
   if (address == LDO_ERC20) return getLdoUsdRate()
   if (address == MAI_ERC20) return getMaiUsdRate()
   if (address == DAI_ERC20) return getDaiUsdRate()
-  if (address == USDC_ERC20) return getDaiUsdRate()
+  if (address == USDC_ERC20) return getUsdcUsdRate()
   if (address == FRAX_ERC20 || address == USDPLUS_ERC20 || address == TUSD_ERC20)
     //TODO: Find real price
     return BigDecimal.fromString('1')

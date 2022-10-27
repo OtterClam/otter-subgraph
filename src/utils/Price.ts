@@ -1,5 +1,5 @@
 import {
-  USDC_MATIC_AGGREGATOR,
+  MATIC_USD_AGGREGATOR,
   MATIC_ERC20,
   DYST_ERC20,
   FRAX_ERC20,
@@ -21,6 +21,8 @@ import {
   MAI_USD_AGGREGATOR,
   DAI_ERC20,
   USDC_USD_AGGREGATOR,
+  SAND_USD_AGGREGATOR,
+  SAND_ERC20,
 } from './Constants'
 import { Address, BigDecimal, BigInt, log } from '@graphprotocol/graph-ts'
 import { UniswapV2Pair } from '../../generated/OtterClamERC20V2/UniswapV2Pair'
@@ -41,7 +43,7 @@ function findTokenPrice(exchange: Exchange, inTokenAddress: Address, outTokenAdd
 }
 
 export function getwMaticUsdRate(): BigDecimal {
-  let pair = AggregatorV3InterfaceABI.bind(USDC_MATIC_AGGREGATOR)
+  let pair = AggregatorV3InterfaceABI.bind(MATIC_USD_AGGREGATOR)
   let wmaticPrice = pair.latestRoundData()
   return toDecimal(wmaticPrice.value1, pair.decimals())
 }
@@ -66,6 +68,14 @@ export function getMaiUsdRate(): BigDecimal {
   let maiPrice = pair.latestRoundData()
   let decimalPrice = toDecimal(maiPrice.value1, pair.decimals())
   log.info('MAI exchange rate: {}', [decimalPrice.toString()])
+  return decimalPrice
+}
+
+export function getSandUsdRate(): BigDecimal {
+  let pair = AggregatorV3InterfaceABI.bind(SAND_USD_AGGREGATOR)
+  let sandPrice = pair.latestRoundData()
+  let decimalPrice = toDecimal(sandPrice.value1, pair.decimals())
+  log.info('SAND exchange rate: {}', [decimalPrice.toString()])
   return decimalPrice
 }
 
@@ -276,7 +286,8 @@ export function findPrice(blockNumber: BigInt, address: Address): BigDecimal {
   if (address == LDO_ERC20) return getLdoUsdRate()
   if (address == MAI_ERC20) return getMaiUsdRate()
   if (address == DAI_ERC20) return getDaiUsdRate()
-  if (address == USDC_ERC20) return getDaiUsdRate()
+  if (address == USDC_ERC20) return getUsdcUsdRate()
+  if (address == SAND_ERC20) return getSandUsdRate()
   if (address == FRAX_ERC20 || address == USDPLUS_ERC20 || address == TUSD_ERC20)
     //TODO: Find real price
     return BigDecimal.fromString('1')

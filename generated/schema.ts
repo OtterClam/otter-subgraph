@@ -326,6 +326,10 @@ export class ProtocolMetric extends Entity {
       "treasuryUniV3HedgedMaticUsdcStrategyMarketValue",
       Value.fromBigDecimal(BigDecimal.zero())
     );
+    this.set(
+      "treasurySandMarketValue",
+      Value.fromBigDecimal(BigDecimal.zero())
+    );
     this.set("totalBurnedClam", Value.fromBigDecimal(BigDecimal.zero()));
     this.set(
       "totalBurnedClamMarketValue",
@@ -730,6 +734,15 @@ export class ProtocolMetric extends Entity {
       "treasuryUniV3HedgedMaticUsdcStrategyMarketValue",
       Value.fromBigDecimal(value)
     );
+  }
+
+  get treasurySandMarketValue(): BigDecimal {
+    let value = this.get("treasurySandMarketValue");
+    return value!.toBigDecimal();
+  }
+
+  set treasurySandMarketValue(value: BigDecimal) {
+    this.set("treasurySandMarketValue", Value.fromBigDecimal(value));
   }
 
   get totalBurnedClam(): BigDecimal {

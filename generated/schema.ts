@@ -1033,6 +1033,8 @@ export class TreasuryRevenue extends Entity {
     this.set("maticMarketValue", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("usdtClamAmount", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("usdtMarketValue", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("quickClamAmount", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("quickMarketValue", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("totalRevenueClamAmount", Value.fromBigDecimal(BigDecimal.zero()));
     this.set(
       "totalRevenueMarketValue",
@@ -1307,6 +1309,24 @@ export class TreasuryRevenue extends Entity {
 
   set usdtMarketValue(value: BigDecimal) {
     this.set("usdtMarketValue", Value.fromBigDecimal(value));
+  }
+
+  get quickClamAmount(): BigDecimal {
+    let value = this.get("quickClamAmount");
+    return value!.toBigDecimal();
+  }
+
+  set quickClamAmount(value: BigDecimal) {
+    this.set("quickClamAmount", Value.fromBigDecimal(value));
+  }
+
+  get quickMarketValue(): BigDecimal {
+    let value = this.get("quickMarketValue");
+    return value!.toBigDecimal();
+  }
+
+  set quickMarketValue(value: BigDecimal) {
+    this.set("quickMarketValue", Value.fromBigDecimal(value));
   }
 
   get totalRevenueClamAmount(): BigDecimal {

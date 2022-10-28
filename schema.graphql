@@ -116,6 +116,8 @@ type TreasuryRevenue @entity {
   maticMarketValue: BigDecimal!
   usdtClamAmount: BigDecimal!
   usdtMarketValue: BigDecimal!
+  quickClamAmount: BigDecimal!
+  quickMarketValue: BigDecimal!
   totalRevenueClamAmount: BigDecimal!
   totalRevenueMarketValue: BigDecimal!
 }

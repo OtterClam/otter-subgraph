@@ -4,7 +4,7 @@ import {
 } from '../generated/UniV3MaticUsdcHedgedLpStrategy/IStrategy'
 import { ERC20 } from '../generated/OtterClamERC20V2/ERC20'
 import { ClaimReward, PayoutReward } from '../generated/schema'
-import { MAI_ERC20, MATIC_ERC20, USDC_ERC20, USDT_ERC20 } from './utils/Constants'
+import { MAI_ERC20, MATIC_ERC20, QUICK_ERC20, USDC_ERC20, USDT_ERC20 } from './utils/Constants'
 import { toDecimal } from './utils/Decimals'
 import { loadOrCreateTransaction } from './utils/Transactions'
 import { updateTreasuryRevenueClaimMaiReward, updateTreasuryRevenueClaimUsdtReward } from './utils/TreasuryRevenue'
@@ -24,6 +24,9 @@ export function handleClaimRewardToken(event: ClaimRewardTokenEvent): void {
     updateTreasuryRevenueClaimMaiReward(event.block.number, claim)
   }
   if (event.params.token == USDT_ERC20) {
+    updateTreasuryRevenueClaimUsdtReward(event.block.number, claim)
+  }
+  if (event.params.token == QUICK_ERC20) {
     updateTreasuryRevenueClaimUsdtReward(event.block.number, claim)
   }
 

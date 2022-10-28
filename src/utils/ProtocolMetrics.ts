@@ -115,6 +115,7 @@ import { IStrategy } from '../../generated/UniV3MaticUsdcHedgedLpStrategy/IStrat
 import { UniV3HedgedMaticUsdcInvestment } from '../Investments/UniV3HedgedMaticUsdc'
 import { PenroseHedgeLpStrategy } from '../../generated/OtterClamERC20V2/PenroseHedgeLpStrategy'
 import { DystPair } from '../../generated/OtterClamERC20V2/DystPair'
+import { QuickswapV3MaiUsdtInvestment } from '../Investments/QuickswapV3MaiUsdt'
 
 export function loadOrCreateProtocolMetric(timestamp: BigInt): ProtocolMetric {
   let dayTimestamp = dayFromTimestamp(timestamp)
@@ -507,6 +508,8 @@ function setTreasuryAssetMarketValues(transaction: Transaction, protocolMetric: 
 
   let uniV3HedgedMaticUsdcValue = new UniV3HedgedMaticUsdcInvestment(transaction).netAssetValue()
 
+  let quickV3MaiUsdtValue = new QuickswapV3MaiUsdtInvestment(transaction).netAssetValue()
+
   // Sandbox
   let sandboxLandStakeValue = BigDecimal.zero()
   if (transaction.blockNumber.gt(SANDBOX_LAND_STAKING_START_BLOCK)) {
@@ -533,8 +536,9 @@ function setTreasuryAssetMarketValues(transaction: Transaction, protocolMetric: 
     .plus(penroseHedgedLpValue)
     .plus(kyberHedgedMaticStMaticValue)
     .plus(uniV3HedgedMaticUsdcValue)
-    //univ3
+    //uniV3 & quickswapV3
     .plus(uniV3UsdcMaiValue)
+    .plus(quickV3MaiUsdtValue)
 
   let lpValue_noClam = lpValue
     .plus(clamMai_MaiOnlyValue)
@@ -592,6 +596,7 @@ function setTreasuryAssetMarketValues(transaction: Transaction, protocolMetric: 
   protocolMetric.treasuryUniV3UsdcMaiStrategyMarketValue = uniV3UsdcMaiValue
   protocolMetric.treasuryUniV3HedgedMaticUsdcStrategyMarketValue = uniV3HedgedMaticUsdcValue
   protocolMetric.treasurySandMarketValue = sandboxLandStakeValue
+  protocolMetric.treasuryQuickswapV3MaiUsdtStrategyMarketValue = quickV3MaiUsdtValue
 
   return protocolMetric
 }

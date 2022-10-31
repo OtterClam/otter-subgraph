@@ -7,7 +7,11 @@ import { ClaimReward, PayoutReward } from '../generated/schema'
 import { MAI_ERC20, MATIC_ERC20, QUICK_ERC20, USDC_ERC20, USDT_ERC20 } from './utils/Constants'
 import { toDecimal } from './utils/Decimals'
 import { loadOrCreateTransaction } from './utils/Transactions'
-import { updateTreasuryRevenueClaimMaiReward, updateTreasuryRevenueClaimUsdtReward } from './utils/TreasuryRevenue'
+import {
+  updateTreasuryRevenueClaimMaiReward,
+  updateTreasuryRevenueClaimQuickReward,
+  updateTreasuryRevenueClaimUsdtReward,
+} from './utils/TreasuryRevenue'
 import { UniV3HedgedMaticUsdcInvestment } from './Investments/UniV3HedgedMaticUsdc'
 
 export function handleClaimRewardToken(event: ClaimRewardTokenEvent): void {
@@ -27,7 +31,7 @@ export function handleClaimRewardToken(event: ClaimRewardTokenEvent): void {
     updateTreasuryRevenueClaimUsdtReward(event.block.number, claim)
   }
   if (event.params.token == QUICK_ERC20) {
-    updateTreasuryRevenueClaimUsdtReward(event.block.number, claim)
+    updateTreasuryRevenueClaimQuickReward(event.block.number, claim)
   }
 
   let investment = new UniV3HedgedMaticUsdcInvestment(transaction)

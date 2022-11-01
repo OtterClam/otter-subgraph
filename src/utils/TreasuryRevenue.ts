@@ -29,6 +29,8 @@ export function setTreasuryRevenueTotals(revenue: TreasuryRevenue): TreasuryReve
     .plus(revenue.usdcClamAmount)
     .plus(revenue.maiClamAmount)
     .plus(revenue.maticClamAmount)
+    .plus(revenue.usdtClamAmount)
+    .plus(revenue.quickClamAmount)
 
   revenue.totalRevenueMarketValue = revenue.qiMarketValue
     .plus(revenue.ottopiaMarketValue)
@@ -42,6 +44,8 @@ export function setTreasuryRevenueTotals(revenue: TreasuryRevenue): TreasuryReve
     .plus(revenue.usdcMarketValue)
     .plus(revenue.maiMarketValue)
     .plus(revenue.maticMarketValue)
+    .plus(revenue.usdtMarketValue)
+    .plus(revenue.quickMarketValue)
 
   return revenue
 }
@@ -136,6 +140,44 @@ export function updateTreasuryRevenueClaimUsdcReward(block: BigInt, claim: Claim
   //Aggregate over day with +=
   treasuryRevenue.usdcClamAmount = treasuryRevenue.usdcClamAmount.plus(clamAmount)
   treasuryRevenue.usdcMarketValue = treasuryRevenue.usdcMarketValue.plus(claim.amountUsd)
+
+  treasuryRevenue = setTreasuryRevenueTotals(treasuryRevenue)
+
+  treasuryRevenue.save()
+}
+
+export function updateTreasuryRevenueClaimUsdtReward(block: BigInt, claim: ClaimReward): void {
+  let treasuryRevenue = loadOrCreateTreasuryRevenue(claim.timestamp)
+
+  let clamAmount = claim.amountUsd.div(getClamUsdRate(block))
+  log.debug('ClaimRewardUsdt event, txid: {}, usdcMarketValue {}, clamAmount {}', [
+    claim.id,
+    claim.amountUsd.toString(),
+    clamAmount.toString(),
+  ])
+
+  //Aggregate over day with +=
+  treasuryRevenue.usdtClamAmount = treasuryRevenue.usdtClamAmount.plus(clamAmount)
+  treasuryRevenue.usdtMarketValue = treasuryRevenue.usdtMarketValue.plus(claim.amountUsd)
+
+  treasuryRevenue = setTreasuryRevenueTotals(treasuryRevenue)
+
+  treasuryRevenue.save()
+}
+
+export function updateTreasuryRevenueClaimQuickReward(block: BigInt, claim: ClaimReward): void {
+  let treasuryRevenue = loadOrCreateTreasuryRevenue(claim.timestamp)
+
+  let clamAmount = claim.amountUsd.div(getClamUsdRate(block))
+  log.debug('ClaimRewardQuick event, txid: {}, usdcMarketValue {}, clamAmount {}', [
+    claim.id,
+    claim.amountUsd.toString(),
+    clamAmount.toString(),
+  ])
+
+  //Aggregate over day with +=
+  treasuryRevenue.quickClamAmount = treasuryRevenue.quickClamAmount.plus(clamAmount)
+  treasuryRevenue.quickMarketValue = treasuryRevenue.quickMarketValue.plus(claim.amountUsd)
 
   treasuryRevenue = setTreasuryRevenueTotals(treasuryRevenue)
 

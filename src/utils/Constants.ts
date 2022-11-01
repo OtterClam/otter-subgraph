@@ -14,8 +14,6 @@ export const DAI_ERC20 = Address.fromString('0x8f3cf7ad23cd3cadbd9735aff95802323
 export const MATIC_ERC20 = Address.fromString('0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270')
 export const PEARL_ERC20 = Address.fromString('0x52A7F40BB6e9BD9183071cdBdd3A977D713F2e34')
 export const QI_ERC20 = Address.fromString('0x580A84C73811E1839F75d86d75d88cCa0c241fF4')
-export const QUICK_ERC20 = Address.fromString('0x831753DD7087CaC61aB5644b308642cc1c33Dc13')
-export const DQUICK_ERC20 = Address.fromString('0xf28164A485B0B2C90639E47b0f377b4a438a16B1')
 export const WETH_ERC20 = Address.fromString('0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619')
 export const USDPLUS_ERC20 = Address.fromString('0x236eec6359fb44cce8f97e99387aa7f8cd5cde1f')
 export const USDC_ERC20 = Address.fromString('0x2791bca1f2de4661ed88a30c99a7a9449aa84174')
@@ -28,6 +26,8 @@ export const STMATIC_ERC20 = Address.fromString('0x3A58a54C066FdC0f2D55FC9C89F04
 export const LDO_ERC20 = Address.fromString('0xc3c7d422809852031b44ab29eec9f1eff2a58756')
 export const KNC_ERC20 = Address.fromString('0x1C954E8fe737F99f68Fa1CCda3e51ebDB291948C')
 export const SAND_ERC20 = Address.fromString('0xBbba073C31bF03b8ACf7c28EF0738DeCF3695683')
+export const USDT_ERC20 = Address.fromString('0xc2132D05D31c914a87C6611C10748AEb04B58e8F')
+export const QUICK_ERC20 = Address.fromString('0xB5C064F955D8e7F38fE0460C556a72987494eE17')
 
 export const OCQI_CONTRACT = Address.fromString('0x0906ee253B2cD6737A3CD3838490Cb0b90fD68be')
 export const QCQI_START_BLOCK = BigInt.fromI32(25443072)
@@ -55,6 +55,8 @@ export const USDC_USD_AGGREGATOR = Address.fromString('0xfE4A8cc5b5B2366C1B58Bea
 export const DAI_USD_AGGREGATOR = Address.fromString('0x4746DeC9e833A82EC7C2C1356372CcF2cfcD2F3D')
 export const MAI_USD_AGGREGATOR = Address.fromString('0xd8d483d813547CfB624b8Dc33a00F2fcbCd2D428')
 export const SAND_USD_AGGREGATOR = Address.fromString('0x3D49406EDd4D52Fb7FFd25485f32E073b529C924')
+export const USDT_USD_AGGREGATOR = Address.fromString('0x0A6513e40db6EB1b165753AD52E80663aeA50545')
+export const ETH_USD_AGGREGATOR = Address.fromString('0xF9680D99D6C9589e2a93a78A04A279e509205945')
 
 export const CIRCULATING_SUPPLY_CONTRACT = Address.fromString('0x99ee91871cf39A44E3Fc842541274d7eA05AE4b3')
 export const CIRCULATING_SUPPLY_CONTRACT_BLOCK = BigInt.fromI32(21431527)
@@ -146,6 +148,9 @@ export const UNIV3_USDC_MAI_STRATEGY = Address.fromString('0x12De7aF6442A0A419B9
 
 export const UNIV3_HEDGED_MATIC_USDC_START_BLOCK = BigInt.fromI32(33703034)
 export const UNIV3_HEDGED_MATIC_USDC_STRATEGY = Address.fromString('0x1D8Ecd41997D43CfA8667d44288b1c433aBa6fCA')
+
+export const QUICKSWAPV3_MAI_USDT_START_BLOCK = BigInt.fromI32(34900027)
+export const QUICKSWAPV3_MAI_USDT_STRATEGY = Address.fromString('0xCa2dFfB466B6565763510b573AA1B4DeBEC64928')
 
 export const SANDBOX_LAND_STAKING = Address.fromString('0xD3A9CAa25393765c05ce9f332B5E33b5E33D8B8F')
 export const SANDBOX_LAND_STAKING_START_BLOCK = BigInt.fromI32(34080313)

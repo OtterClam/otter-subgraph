@@ -258,6 +258,10 @@ export class ProtocolMetric extends Entity {
       Value.fromBigDecimal(BigDecimal.zero())
     );
     this.set(
+      "treasurySandMarketValue",
+      Value.fromBigDecimal(BigDecimal.zero())
+    );
+    this.set(
       "treasuryQiWmaticQiInvestmentMarketValue",
       Value.fromBigDecimal(BigDecimal.zero())
     );
@@ -327,7 +331,7 @@ export class ProtocolMetric extends Entity {
       Value.fromBigDecimal(BigDecimal.zero())
     );
     this.set(
-      "treasurySandMarketValue",
+      "treasuryQuickswapV3MaiUsdtStrategyMarketValue",
       Value.fromBigDecimal(BigDecimal.zero())
     );
     this.set("totalBurnedClam", Value.fromBigDecimal(BigDecimal.zero()));
@@ -538,6 +542,15 @@ export class ProtocolMetric extends Entity {
     this.set("treasuryQiWmaticMarketValue", Value.fromBigDecimal(value));
   }
 
+  get treasurySandMarketValue(): BigDecimal {
+    let value = this.get("treasurySandMarketValue");
+    return value!.toBigDecimal();
+  }
+
+  set treasurySandMarketValue(value: BigDecimal) {
+    this.set("treasurySandMarketValue", Value.fromBigDecimal(value));
+  }
+
   get treasuryQiWmaticQiInvestmentMarketValue(): BigDecimal {
     let value = this.get("treasuryQiWmaticQiInvestmentMarketValue");
     return value!.toBigDecimal();
@@ -736,13 +749,16 @@ export class ProtocolMetric extends Entity {
     );
   }
 
-  get treasurySandMarketValue(): BigDecimal {
-    let value = this.get("treasurySandMarketValue");
+  get treasuryQuickswapV3MaiUsdtStrategyMarketValue(): BigDecimal {
+    let value = this.get("treasuryQuickswapV3MaiUsdtStrategyMarketValue");
     return value!.toBigDecimal();
   }
 
-  set treasurySandMarketValue(value: BigDecimal) {
-    this.set("treasurySandMarketValue", Value.fromBigDecimal(value));
+  set treasuryQuickswapV3MaiUsdtStrategyMarketValue(value: BigDecimal) {
+    this.set(
+      "treasuryQuickswapV3MaiUsdtStrategyMarketValue",
+      Value.fromBigDecimal(value)
+    );
   }
 
   get totalBurnedClam(): BigDecimal {
@@ -1015,6 +1031,10 @@ export class TreasuryRevenue extends Entity {
     this.set("maiMarketValue", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("maticClamAmount", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("maticMarketValue", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("usdtClamAmount", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("usdtMarketValue", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("quickClamAmount", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("quickMarketValue", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("totalRevenueClamAmount", Value.fromBigDecimal(BigDecimal.zero()));
     this.set(
       "totalRevenueMarketValue",
@@ -1271,6 +1291,42 @@ export class TreasuryRevenue extends Entity {
 
   set maticMarketValue(value: BigDecimal) {
     this.set("maticMarketValue", Value.fromBigDecimal(value));
+  }
+
+  get usdtClamAmount(): BigDecimal {
+    let value = this.get("usdtClamAmount");
+    return value!.toBigDecimal();
+  }
+
+  set usdtClamAmount(value: BigDecimal) {
+    this.set("usdtClamAmount", Value.fromBigDecimal(value));
+  }
+
+  get usdtMarketValue(): BigDecimal {
+    let value = this.get("usdtMarketValue");
+    return value!.toBigDecimal();
+  }
+
+  set usdtMarketValue(value: BigDecimal) {
+    this.set("usdtMarketValue", Value.fromBigDecimal(value));
+  }
+
+  get quickClamAmount(): BigDecimal {
+    let value = this.get("quickClamAmount");
+    return value!.toBigDecimal();
+  }
+
+  set quickClamAmount(value: BigDecimal) {
+    this.set("quickClamAmount", Value.fromBigDecimal(value));
+  }
+
+  get quickMarketValue(): BigDecimal {
+    let value = this.get("quickMarketValue");
+    return value!.toBigDecimal();
+  }
+
+  set quickMarketValue(value: BigDecimal) {
+    this.set("quickMarketValue", Value.fromBigDecimal(value));
   }
 
   get totalRevenueClamAmount(): BigDecimal {

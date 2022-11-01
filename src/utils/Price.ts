@@ -23,6 +23,9 @@ import {
   USDC_USD_AGGREGATOR,
   SAND_USD_AGGREGATOR,
   SAND_ERC20,
+  USDT_USD_AGGREGATOR,
+  ETH_USD_AGGREGATOR,
+  USDT_ERC20,
 } from './Constants'
 import { Address, BigDecimal, BigInt, log } from '@graphprotocol/graph-ts'
 import { UniswapV2Pair } from '../../generated/OtterClamERC20V2/UniswapV2Pair'
@@ -44,30 +47,34 @@ function findTokenPrice(exchange: Exchange, inTokenAddress: Address, outTokenAdd
 
 export function getwMaticUsdRate(): BigDecimal {
   let pair = AggregatorV3InterfaceABI.bind(MATIC_USD_AGGREGATOR)
-  let wmaticPrice = pair.latestRoundData()
-  return toDecimal(wmaticPrice.value1, pair.decimals())
+  let lastPrice = pair.latestRoundData()
+  return toDecimal(lastPrice.value1, pair.decimals())
 }
 
 export function getUsdcUsdRate(): BigDecimal {
   let pair = AggregatorV3InterfaceABI.bind(USDC_USD_AGGREGATOR)
-  let usdcPrice = pair.latestRoundData()
-  let decimalPrice = toDecimal(usdcPrice.value1, pair.decimals())
-  log.info('USDC exchange rate: {}', [decimalPrice.toString()])
+  let lastPrice = pair.latestRoundData()
+  let decimalPrice = toDecimal(lastPrice.value1, pair.decimals())
   return decimalPrice
 }
 export function getDaiUsdRate(): BigDecimal {
   let pair = AggregatorV3InterfaceABI.bind(DAI_USD_AGGREGATOR)
-  let daiPrice = pair.latestRoundData()
-  let decimalPrice = toDecimal(daiPrice.value1, pair.decimals())
-  log.info('DAI exchange rate: {}', [decimalPrice.toString()])
+  let lastPrice = pair.latestRoundData()
+  let decimalPrice = toDecimal(lastPrice.value1, pair.decimals())
   return decimalPrice
 }
 
 export function getMaiUsdRate(): BigDecimal {
   let pair = AggregatorV3InterfaceABI.bind(MAI_USD_AGGREGATOR)
-  let maiPrice = pair.latestRoundData()
-  let decimalPrice = toDecimal(maiPrice.value1, pair.decimals())
-  log.info('MAI exchange rate: {}', [decimalPrice.toString()])
+  let lastPrice = pair.latestRoundData()
+  let decimalPrice = toDecimal(lastPrice.value1, pair.decimals())
+  return decimalPrice
+}
+
+export function getUsdtUsdRate(): BigDecimal {
+  let pair = AggregatorV3InterfaceABI.bind(USDT_USD_AGGREGATOR)
+  let lastPrice = pair.latestRoundData()
+  let decimalPrice = toDecimal(lastPrice.value1, pair.decimals())
   return decimalPrice
 }
 
@@ -75,7 +82,6 @@ export function getSandUsdRate(): BigDecimal {
   let pair = AggregatorV3InterfaceABI.bind(SAND_USD_AGGREGATOR)
   let sandPrice = pair.latestRoundData()
   let decimalPrice = toDecimal(sandPrice.value1, pair.decimals())
-  log.info('SAND exchange rate: {}', [decimalPrice.toString()])
   return decimalPrice
 }
 
@@ -88,6 +94,13 @@ export function getQiUsdRate(): BigDecimal {
   let usdPerQi = wmaticPerQi.times(getwMaticUsdRate())
 
   return usdPerQi
+}
+
+export function getwEthUsdRate(): BigDecimal {
+  let pair = AggregatorV3InterfaceABI.bind(ETH_USD_AGGREGATOR)
+  let lastPrice = pair.latestRoundData()
+  let decimalPrice = toDecimal(lastPrice.value1, pair.decimals())
+  return decimalPrice
 }
 
 export function getLdoUsdRate(): BigDecimal {
@@ -128,13 +141,6 @@ export function getPenDystUsdRate(): BigDecimal {
   let dystPerPen = findTokenPrice(dyst, PENDYST_ERC20, DYST_ERC20)
 
   return dystPerPen.times(getDystUsdRate())
-}
-
-// TODO: we can get eth price from chainlink
-export function getwEthUsdRate(): BigDecimal {
-  let usdcPerEth = findTokenPrice(quickSwap, WETH_ERC20, USDC_ERC20)
-
-  return usdcPerEth
 }
 
 export function getClamUsdRate(block: BigInt): BigDecimal {
@@ -288,6 +294,7 @@ export function findPrice(blockNumber: BigInt, address: Address): BigDecimal {
   if (address == DAI_ERC20) return getDaiUsdRate()
   if (address == USDC_ERC20) return getUsdcUsdRate()
   if (address == SAND_ERC20) return getSandUsdRate()
+  if (address == USDT_ERC20) return getUsdtUsdRate()
   if (address == FRAX_ERC20 || address == USDPLUS_ERC20 || address == TUSD_ERC20)
     //TODO: Find real price
     return BigDecimal.fromString('1')

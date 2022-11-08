@@ -81,6 +81,7 @@ export const VLPEN_LOCKER = Address.fromString('0x55ca76e0341ccd35c2e3f34cbf767c
 
 export const DYSTOPIA_PAIR_MAI_CLAM = Address.fromString('0x40705378b468b357435be7302ee22918ee4c4d24')
 export const DYSTOPIA_PAIR_USDPLUS_CLAM = Address.fromString('0x291e289c39cbaf5ee158028d086d76ffa141cfda')
+export const DYSTOPIA_PAIR_USDC_CLAM = Address.fromString('0xC34bEeDB17C9d40FBd619aCAa46c84398B32acfD')
 export const DYSTOPIA_PAIR_WMATIC_DYST = Address.fromString('0x1e08a5b6a1694bc1a65395db6f4c506498daa349')
 export const DYSTOPIA_PAIR_QI_TETUQI = Address.fromString('0x42c0cc5f1827C5d908392654389E5D93da426378')
 export const DYSTOPIA_PAIR_USDC_TUSD = Address.fromString('0xA498a892AD0D3F70AA449798023AA1F4A0888268')
@@ -93,6 +94,7 @@ export const DYSTOPIA_PAIR_PENDYST_DYST = Address.fromString('0x370c7feb6fcd9f08
 
 export const PENROSE_REWARD_MAI_CLAM = Address.fromString('0x4edc2f4368179be77e5e8fba295fff0a82e3df21')
 export const PENROSE_REWARD_USDPLUS_CLAM = Address.fromString('0x582331EB734D2d81e29Eb54A9890AEED1627e2C2')
+export const PENROSE_REWARD_USDC_CLAM = Address.fromString('0xa338758e576a445369Cda008Fb86122E58DD7aBe')
 export const PENROSE_REWARD_WMATIC_DYST = Address.fromString('0xbb1bF0980a61Fc5dAf981B33543Fb54c8E04DFa0')
 export const PENROSE_REWARD_QI_TETUQI = Address.fromString('0x249C0236B0F597EdCE0BF989fdf2EDbB1799FfA8')
 export const PENROSE_REWARD_USDC_TUSD = Address.fromString('0xc1Cc12d610bd71fFdBfE489C941e548Df6f94D14')

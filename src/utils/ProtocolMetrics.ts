@@ -79,14 +79,14 @@ import {
   USDPLUS_INVESTMENT_STRATEGY,
   GOVERNANCE_START_BLOCK,
   DYSTOPIA_veDYST_MATIC_AIRDROP_ID,
-  UNIV3_HEDGED_MATIC_USDC_START_BLOCK,
-  UNIV3_HEDGED_MATIC_USDC_STRATEGY,
   PENROSE_HEDGED_MATIC_STRATEGY,
   PENROSE_HEDGE_START_BLOCK,
   USDPLUS_STMATIC_PENROSE_USER_PROXY,
   SANDBOX_LAND_STAKING_START_BLOCK,
   SANDBOX_LAND_STAKING,
   OTTER_DEPLOYER,
+  DYSTOPIA_PAIR_USDC_CLAM,
+  PENROSE_REWARD_USDC_CLAM,
 } from './Constants'
 import { dayFromTimestamp } from './Dates'
 import { toDecimal } from './Decimals'
@@ -355,6 +355,7 @@ function setTreasuryAssetMarketValues(transaction: Transaction, protocolMetric: 
   let wMaticDystValue = BigDecimal.zero()
   let clamMaiDystValue = BigDecimal.zero()
   let clamUsdplusDystValue = BigDecimal.zero()
+  let clamUsdcDystValue = BigDecimal.zero()
   let dystMarketValue = BigDecimal.zero()
   let veDystMarketValue = BigDecimal.zero()
   let penMarketValue = BigDecimal.zero()
@@ -364,6 +365,7 @@ function setTreasuryAssetMarketValues(transaction: Transaction, protocolMetric: 
 
   let clamMaiDystLpOwned = BigInt.zero()
   let clamUsdPlusDystLpOwned = BigInt.zero()
+  let clamUsdcDystLpOwned = BigInt.zero()
   if (transaction.blockNumber.gt(DYST_START_BLOCK)) {
     dystMarketValue = getTreasuryTokenValue(transaction.blockNumber, DYST_ERC20)
 
@@ -391,6 +393,20 @@ function setTreasuryAssetMarketValues(transaction: Transaction, protocolMetric: 
       transaction.blockNumber,
       PENROSE_REWARD_USDPLUS_CLAM,
       DYSTOPIA_PAIR_USDPLUS_CLAM,
+    )
+
+    //clam-usdc
+    let clamUsdcRewards = PenroseMultiRewards.bind(PENROSE_REWARD_USDC_CLAM).try_balanceOf(
+      DAO_WALLET_PENROSE_USER_PROXY,
+    )
+    if (!clamUsdcRewards.reverted) {
+      clamUsdcDystLpOwned = clamUsdcRewards.value
+    }
+
+    clamUsdcDystValue = getPenroseRewardBalance(
+      transaction.blockNumber,
+      PENROSE_REWARD_USDC_CLAM,
+      DYSTOPIA_PAIR_USDC_CLAM,
     )
 
     //qi-tetuqi
@@ -432,6 +448,13 @@ function setTreasuryAssetMarketValues(transaction: Transaction, protocolMetric: 
     clamUsdPlusDystLpOwned,
     DYSTOPIA_PAIR_USDPLUS_CLAM,
     ReserveToken.TokenZero, //USD+ is token0
+  )
+
+  let clamUsdc_UsdcOnlyValue = getDystPairHalfReserveUSD(
+    transaction.blockNumber,
+    clamUsdcDystLpOwned,
+    DYSTOPIA_PAIR_USDC_CLAM,
+    ReserveToken.TokenZero, //USDC is token0
   )
 
   if (transaction.blockNumber.gt(PEN_START_BLOCK)) {
@@ -544,11 +567,13 @@ function setTreasuryAssetMarketValues(transaction: Transaction, protocolMetric: 
     .plus(clamMai_MaiOnlyValue)
     .plus(clamUsdPlus_UsdPlusOnlyValue)
     .plus(clamMaiDyst_MaiOnlyValue)
+    .plus(clamUsdc_UsdcOnlyValue)
 
   let lpValue_Clam = lpValue
     .plus(clamMai_value)
     .plus(clamUsdplusDystValue)
     .plus(clamMaiDystValue)
+    .plus(clamUsdcDystValue)
 
   let tokenValues = wmaticValue
     .plus(qiMarketValue)
@@ -597,6 +622,7 @@ function setTreasuryAssetMarketValues(transaction: Transaction, protocolMetric: 
   protocolMetric.treasuryUniV3HedgedMaticUsdcStrategyMarketValue = uniV3HedgedMaticUsdcValue
   protocolMetric.treasurySandMarketValue = sandboxLandStakeValue
   protocolMetric.treasuryQuickswapV3MaiUsdtStrategyMarketValue = quickV3MaiUsdtValue
+  protocolMetric.treasuryDystopiaPairUsdcClamMarketValue = clamUsdcDystValue
 
   return protocolMetric
 }

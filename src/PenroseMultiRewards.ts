@@ -3,6 +3,7 @@ import {
   DAO_WALLET_PENROSE_USER_PROXY,
   DYST_ERC20,
   PENDYST_ERC20,
+  PENROSE_REWARD_USDC_CLAM,
   PENROSE_REWARD_USDPLUS_CLAM,
   PEN_DYST_PARTNER_REWARDS,
   PEN_ERC20,
@@ -19,6 +20,7 @@ import { ClaimReward } from '../generated/schema'
 import { toDecimal } from './utils/Decimals'
 import { getDystUsdRate, getPenDystUsdRate, getPenUsdRate } from './utils/Price'
 import { PenrosePartnerPenDystInvestment } from './Investments/PenrosePartnerPenDyst'
+import { PenroseClamUsdcInvestment } from './Investments/PenroseClamUsdc'
 
 export function handleRewardPaid(event: RewardPaid): void {
   if (event.params.user != DAO_WALLET_PENROSE_USER_PROXY) return
@@ -58,6 +60,11 @@ export function handleRewardPaid(event: RewardPaid): void {
 
   if (event.address == PENROSE_REWARD_USDPLUS_CLAM) {
     let investment = new PenroseClamUsdPlusInvestment(transaction)
+    investment.addRevenue(claim)
+  }
+
+  if (event.address == PENROSE_REWARD_USDC_CLAM) {
+    let investment = new PenroseClamUsdcInvestment(transaction)
     investment.addRevenue(claim)
   }
   //Penrose Partnership includes a lot of dust, ignore

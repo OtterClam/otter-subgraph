@@ -12,7 +12,7 @@ import {
   updateTreasuryRevenueClaimQuickReward,
   updateTreasuryRevenueClaimUsdtReward,
 } from './utils/TreasuryRevenue'
-import { UniV3HedgedMaticUsdcInvestment } from './Investments/UniV3HedgedMaticUsdc'
+import { QuickswapV3MaiUsdtInvestment } from './Investments/QuickswapV3MaiUsdt'
 
 export function handleClaimRewardToken(event: ClaimRewardTokenEvent): void {
   let transaction = loadOrCreateTransaction(event.transaction, event.block)
@@ -34,13 +34,13 @@ export function handleClaimRewardToken(event: ClaimRewardTokenEvent): void {
     updateTreasuryRevenueClaimQuickReward(event.block.number, claim)
   }
 
-  let investment = new UniV3HedgedMaticUsdcInvestment(transaction)
+  let investment = new QuickswapV3MaiUsdtInvestment(transaction)
   investment.addRevenue(claim)
 }
 
 export function handlePayoutReward(event: PayoutRewardEvent): void {
   let transaction = loadOrCreateTransaction(event.transaction, event.block)
-  let investment = new UniV3HedgedMaticUsdcInvestment(transaction)
+  let investment = new QuickswapV3MaiUsdtInvestment(transaction)
 
   let payout = new PayoutReward(`${investment.strategy}_${transaction.id}`)
   payout.netAssetValue = toDecimal(event.params.nav, 6)

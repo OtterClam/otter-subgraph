@@ -338,13 +338,10 @@ export class ProtocolMetric extends Entity {
       "treasuryQuickswapV3MaiUsdtStrategyMarketValue",
       Value.fromBigDecimal(BigDecimal.zero())
     );
+    this.set("treasuryClamValue", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("totalBurnedClam", Value.fromBigDecimal(BigDecimal.zero()));
     this.set(
       "totalBurnedClamMarketValue",
-      Value.fromBigDecimal(BigDecimal.zero())
-    );
-    this.set(
-      "totalClamUsdPlusRebaseValue",
       Value.fromBigDecimal(BigDecimal.zero())
     );
   }
@@ -777,6 +774,15 @@ export class ProtocolMetric extends Entity {
     );
   }
 
+  get treasuryClamValue(): BigDecimal {
+    let value = this.get("treasuryClamValue");
+    return value!.toBigDecimal();
+  }
+
+  set treasuryClamValue(value: BigDecimal) {
+    this.set("treasuryClamValue", Value.fromBigDecimal(value));
+  }
+
   get totalBurnedClam(): BigDecimal {
     let value = this.get("totalBurnedClam");
     return value!.toBigDecimal();
@@ -793,15 +799,6 @@ export class ProtocolMetric extends Entity {
 
   set totalBurnedClamMarketValue(value: BigDecimal) {
     this.set("totalBurnedClamMarketValue", Value.fromBigDecimal(value));
-  }
-
-  get totalClamUsdPlusRebaseValue(): BigDecimal {
-    let value = this.get("totalClamUsdPlusRebaseValue");
-    return value!.toBigDecimal();
-  }
-
-  set totalClamUsdPlusRebaseValue(value: BigDecimal) {
-    this.set("totalClamUsdPlusRebaseValue", Value.fromBigDecimal(value));
   }
 }
 

@@ -599,6 +599,8 @@ dataSources:
           file: ./abis/MaiUsdcStrategy.json
         - name: QiFarmV3
           file: ./abis/QiFarmV3.json
+        - name: IStrategy
+          file: ./abis/IStrategy.json
         #====== getPrice() required contracts======
         - name: ERC20
           file: ./abis/ERC20.json

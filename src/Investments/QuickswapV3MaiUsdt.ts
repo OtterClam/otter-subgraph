@@ -12,7 +12,7 @@ import { IStrategy } from '../../generated/QuickswapV3MaiUsdtStrategy/IStrategy'
 export class QuickswapV3MaiUsdtInvestment implements InvestmentInterface {
   public investment!: Investment
   public readonly strategy: string = 'MAI/USDT'
-  public readonly protocol: string = 'Quickswapswap V3'
+  public readonly protocol: string = 'Quickswap V3'
   public readonly startBlock: BigInt = QUICKSWAPV3_MAI_USDT_START_BLOCK
   private currentBlock: BigInt = BigInt.zero()
   private active: boolean = false

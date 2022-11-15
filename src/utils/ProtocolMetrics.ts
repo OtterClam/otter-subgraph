@@ -87,6 +87,7 @@ import {
   OTTER_DEPLOYER,
   DYSTOPIA_PAIR_USDC_CLAM,
   PENROSE_REWARD_USDC_CLAM,
+  CLAM_WALLET,
 } from './Constants'
 import { dayFromTimestamp } from './Dates'
 import { toDecimal } from './Decimals'
@@ -116,6 +117,7 @@ import { UniV3HedgedMaticUsdcInvestment } from '../Investments/UniV3HedgedMaticU
 import { PenroseHedgeLpStrategy } from '../../generated/OtterClamERC20V2/PenroseHedgeLpStrategy'
 import { DystPair } from '../../generated/OtterClamERC20V2/DystPair'
 import { QuickswapV3MaiUsdtInvestment } from '../Investments/QuickswapV3MaiUsdt'
+import { QiDaoUsdcMaiInvestment } from '../Investments/QiDaoUsdcMai'
 
 export function loadOrCreateProtocolMetric(timestamp: BigInt): ProtocolMetric {
   let dayTimestamp = dayFromTimestamp(timestamp)
@@ -305,11 +307,7 @@ function setTreasuryAssetMarketValues(transaction: Transaction, protocolMetric: 
       getMaiUsdcInvestmentValueFarmV3(transaction.blockNumber),
     )
   }
-  let maiUsdcMarketValue = getUniPairUSD(
-    transaction.blockNumber,
-    ERC20.bind(UNI_MAI_USDC_PAIR).balanceOf(TREASURY_ADDRESS),
-    UNI_MAI_USDC_PAIR,
-  )
+  let maiUsdcMarketValue = new QiDaoUsdcMaiInvestment(transaction).netAssetValue()
 
   let tetuQiMarketValue = BigDecimal.zero()
   if (transaction.blockNumber.gt(TETU_QI_START_BLOCK)) {
@@ -345,8 +343,6 @@ function setTreasuryAssetMarketValues(transaction: Transaction, protocolMetric: 
   if (transaction.blockNumber.gt(QCQI_START_BLOCK)) {
     ocQiMarketValue = getTreasuryTokenValue(transaction.blockNumber, OCQI_CONTRACT)
   }
-
-  let clamUsdPlusRebases = BigDecimal.zero()
 
   //DYSTOPIA & PENROSE
   let qiTetuQiValue = BigDecimal.zero()
@@ -540,6 +536,10 @@ function setTreasuryAssetMarketValues(transaction: Transaction, protocolMetric: 
     sandboxLandStakeValue = toDecimal(stakedAmount, 18).times(getSandUsdRate())
   }
 
+  //treasury-held CLAM
+  let clamValue = BigDecimal.zero()
+  clamValue = toDecimal(ERC20.bind(CLAM_ERC20).balanceOf(CLAM_WALLET), 9).times(getClamUsdRate(transaction.blockNumber))
+
   let stableValueDecimal = maiBalance
     .plus(daiBalance)
     .plus(maiUsdcQiInvestmentValueDecimal)
@@ -574,6 +574,7 @@ function setTreasuryAssetMarketValues(transaction: Transaction, protocolMetric: 
     .plus(clamUsdplusDystValue)
     .plus(clamMaiDystValue)
     .plus(clamUsdcDystValue)
+    .plus(clamValue)
 
   let tokenValues = wmaticValue
     .plus(qiMarketValue)
@@ -614,7 +615,6 @@ function setTreasuryAssetMarketValues(transaction: Transaction, protocolMetric: 
   protocolMetric.treasuryVlPenMarketValue = vlPenMarketValue
   protocolMetric.treasuryPenDystMarketValue = penDystMarketValue
   protocolMetric.treasuryMaiStMaticMarketValue = maiStMaticMarketValue
-  protocolMetric.totalClamUsdPlusRebaseValue = clamUsdPlusRebases
   protocolMetric.treasuryUsdPlusMarketValue = usdPlusMarketValue
   protocolMetric.treasuryPenroseHedgedMaticMarketValue = penroseHedgedLpValue
   protocolMetric.treasuryKyberswapMaticStMaticHedgedMarketValue = kyberHedgedMaticStMaticValue

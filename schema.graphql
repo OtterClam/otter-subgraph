@@ -28,7 +28,6 @@ type ProtocolMetric @entity {
   marketCap: BigDecimal!
   treasuryMarketValue: BigDecimal!
   treasuryMarketValueWithoutClam: BigDecimal!
-  treasuryMaiUsdcMarketValue: BigDecimal!
   treasuryMaiUsdcQiInvestmentValue: BigDecimal!
   treasuryMaiMarketValue: BigDecimal!
   treasuryDaiMarketValue: BigDecimal!

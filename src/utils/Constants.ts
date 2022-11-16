@@ -128,6 +128,7 @@ export const MAI_USDC_INVESTMENT_STRATEGY = Address.fromString('0x31e79E57fE7287
 export const QI_MATIC_INVESTMENT_STRATEGY = Address.fromString('0x69f6c4Fa150F9F0b3037612CF8FadDAeDbd46Bb8')
 export const QI_FARM_V3 = Address.fromString('0xFFD2AA58Cca3A44120aaA42CEA2852348A9c2eA6')
 export const QI_FARM_CHANGE_BLOCK = BigInt.fromI32(31831179)
+export const QI_FARM_ARRAKIS_BLOCK = BigInt.fromI32(35620390)
 
 export const USDPLUS_STMATIC_PENROSE_USER_PROXY = Address.fromString('0xeFc4947BBBecDAd9b83BCebC7485d7c120DB699f')
 export const MAI_STMATIC_BLOCK = BigInt.fromI32(32213139)

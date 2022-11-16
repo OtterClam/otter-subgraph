@@ -87,6 +87,8 @@ import {
   OTTER_DEPLOYER,
   DYSTOPIA_PAIR_USDC_CLAM,
   PENROSE_REWARD_USDC_CLAM,
+  CLAM_WALLET,
+  QI_FARM_ARRAKIS_BLOCK,
 } from './Constants'
 import { dayFromTimestamp } from './Dates'
 import { toDecimal } from './Decimals'
@@ -116,6 +118,7 @@ import { UniV3HedgedMaticUsdcInvestment } from '../Investments/UniV3HedgedMaticU
 import { PenroseHedgeLpStrategy } from '../../generated/OtterClamERC20V2/PenroseHedgeLpStrategy'
 import { DystPair } from '../../generated/OtterClamERC20V2/DystPair'
 import { QuickswapV3MaiUsdtInvestment } from '../Investments/QuickswapV3MaiUsdt'
+import { QiDaoUsdcMaiInvestment } from '../Investments/QiDaoUsdcMai'
 
 export function loadOrCreateProtocolMetric(timestamp: BigInt): ProtocolMetric {
   let dayTimestamp = dayFromTimestamp(timestamp)
@@ -305,11 +308,9 @@ function setTreasuryAssetMarketValues(transaction: Transaction, protocolMetric: 
       getMaiUsdcInvestmentValueFarmV3(transaction.blockNumber),
     )
   }
-  let maiUsdcMarketValue = getUniPairUSD(
-    transaction.blockNumber,
-    ERC20.bind(UNI_MAI_USDC_PAIR).balanceOf(TREASURY_ADDRESS),
-    UNI_MAI_USDC_PAIR,
-  )
+  if (transaction.blockNumber.gt(QI_FARM_ARRAKIS_BLOCK)) {
+    maiUsdcQiInvestmentValueDecimal = new QiDaoUsdcMaiInvestment(transaction).netAssetValue()
+  }
 
   let tetuQiMarketValue = BigDecimal.zero()
   if (transaction.blockNumber.gt(TETU_QI_START_BLOCK)) {
@@ -345,8 +346,6 @@ function setTreasuryAssetMarketValues(transaction: Transaction, protocolMetric: 
   if (transaction.blockNumber.gt(QCQI_START_BLOCK)) {
     ocQiMarketValue = getTreasuryTokenValue(transaction.blockNumber, OCQI_CONTRACT)
   }
-
-  let clamUsdPlusRebases = BigDecimal.zero()
 
   //DYSTOPIA & PENROSE
   let qiTetuQiValue = BigDecimal.zero()
@@ -540,10 +539,13 @@ function setTreasuryAssetMarketValues(transaction: Transaction, protocolMetric: 
     sandboxLandStakeValue = toDecimal(stakedAmount, 18).times(getSandUsdRate())
   }
 
+  //treasury-held CLAM
+  let clamValue = BigDecimal.zero()
+  clamValue = toDecimal(ERC20.bind(CLAM_ERC20).balanceOf(CLAM_WALLET), 9).times(getClamUsdRate(transaction.blockNumber))
+
   let stableValueDecimal = maiBalance
     .plus(daiBalance)
     .plus(maiUsdcQiInvestmentValueDecimal)
-    .plus(maiUsdcMarketValue)
     .plus(usdcTusdValue)
     .plus(usdplusUsdcValue)
     .plus(usdPlusMarketValue)
@@ -574,6 +576,7 @@ function setTreasuryAssetMarketValues(transaction: Transaction, protocolMetric: 
     .plus(clamUsdplusDystValue)
     .plus(clamMaiDystValue)
     .plus(clamUsdcDystValue)
+    .plus(clamValue)
 
   let tokenValues = wmaticValue
     .plus(qiMarketValue)
@@ -591,7 +594,6 @@ function setTreasuryAssetMarketValues(transaction: Transaction, protocolMetric: 
 
   protocolMetric.treasuryMarketValue = mv
   protocolMetric.treasuryMarketValueWithoutClam = mv_noClam
-  protocolMetric.treasuryMaiUsdcMarketValue = maiUsdcMarketValue
   protocolMetric.treasuryMaiUsdcQiInvestmentValue = maiUsdcQiInvestmentValueDecimal
   protocolMetric.treasuryMaiMarketValue = maiBalance
   protocolMetric.treasuryDaiMarketValue = daiBalance
@@ -614,7 +616,6 @@ function setTreasuryAssetMarketValues(transaction: Transaction, protocolMetric: 
   protocolMetric.treasuryVlPenMarketValue = vlPenMarketValue
   protocolMetric.treasuryPenDystMarketValue = penDystMarketValue
   protocolMetric.treasuryMaiStMaticMarketValue = maiStMaticMarketValue
-  protocolMetric.totalClamUsdPlusRebaseValue = clamUsdPlusRebases
   protocolMetric.treasuryUsdPlusMarketValue = usdPlusMarketValue
   protocolMetric.treasuryPenroseHedgedMaticMarketValue = penroseHedgedLpValue
   protocolMetric.treasuryKyberswapMaticStMaticHedgedMarketValue = kyberHedgedMaticStMaticValue
@@ -645,82 +646,6 @@ export function updateProtocolMetrics(transaction: Transaction): void {
   pm.totalBurnedClamMarketValue = burns.burnedValueUsd
 
   pm.save()
-  //Also trigger a Governance Metrics update
-  updateGovernanceMetrics(transaction)
-}
-
-export function updateGovernanceMetrics(transaction: Transaction): void {
-  /*Penrose Votes
-  PenLens.json ABI has been stripped out to contain only the `votePositionsOf` function,
-  because GraphQL cannot parse functions which return nested lists e.g. type[][]
-  Quick Google says this is a long-standing issue https://github.com/graphprotocol/graph-cli/issues/342
-  but there has been activity during June 2022, 
-  so fingers crossed this will be fixed before we need a function of that signature.
-  */
-  if (transaction.blockNumber.lt(GOVERNANCE_START_BLOCK)) return
-
-  let governanceMetric = loadOrCreateGovernanceMetric(transaction.timestamp)
-  let voteSingleton = loadOrCreateVotePositionSingleton()
-  let voteContract = PenLens.bind(PENROSE_LENS_PROXY)
-
-  let tryVoteTuple = voteContract.try_votePositionsOf(DAO_WALLET_PENROSE_USER_PROXY)
-  let currentVotes: string[] = []
-  if (!tryVoteTuple.reverted) {
-    let voteTuple = tryVoteTuple.value
-    for (let i = 0; i < voteTuple.votes.length; i++) {
-      let vote = new Vote(voteTuple.votes[i].poolAddress.toHexString())
-      vote.vote = toDecimal(voteTuple.votes[i].weight, 18)
-      vote.timestamp = transaction.timestamp
-      vote.save()
-
-      log.debug('Penrose vote of {} vlPen for pool {} @ time {}', [
-        vote.vote.toString(),
-        vote.id,
-        transaction.timestamp.toString(),
-      ])
-      currentVotes.push(vote.id)
-    }
-    voteSingleton.votes = currentVotes
-    voteSingleton.save()
-  }
-
-  //Calculate our vlPEN voting power in DYST
-  let penDyst = ERC20.bind(PENDYST_ERC20)
-  let vlPenContract = PenLockerV2.bind(VLPEN_LOCKER)
-  let vlPenAmt = toDecimal(vlPenContract.balanceOf(DAO_WALLET_PENROSE_USER_PROXY), 18)
-
-  let penLockedDyst = toDecimal(penDyst.totalSupply(), 18)
-  let vlPenTotal = ERC20.bind(PEN_ERC20).balanceOf(VLPEN_LOCKER)
-
-  let percentVlPenOwned = vlPenAmt.div(toDecimal(vlPenTotal, 18))
-  let finalDystWeight = percentVlPenOwned.times(penLockedDyst)
-
-  let veDystTotalSupply = toDecimal(veDyst.bind(DYSTOPIA_veDYST).totalSupply(), 18)
-  let percentVeDystWeight = finalDystWeight.div(veDystTotalSupply).times(BigDecimal.fromString('100'))
-  percentVlPenOwned = percentVlPenOwned.times(BigDecimal.fromString('100'))
-
-  //QiDAO veDYST votes
-  let qiDaoVeDystAmt = toDecimal(veDyst.bind(DYSTOPIA_veDYST).balanceOfNFT(QIDAO_veDYST_ERC721_ID), 18)
-  // funnel chart
-  governanceMetric.dystMarketCap = toDecimal(ERC20.bind(DYST_ERC20).totalSupply(), 18).times(getDystUsdRate())
-  governanceMetric.veDystMarketCap = veDystTotalSupply.times(getDystUsdRate())
-  governanceMetric.penDystMarketCap = toDecimal(penDyst.totalSupply(), 18).times(getPenDystUsdRate())
-  governanceMetric.vlPenMarketCap = toDecimal(vlPenContract.totalSupply(), 18).times(getPenUsdRate())
-  governanceMetric.otterClamVlPenMarketCap = vlPenAmt.times(getPenUsdRate())
-  // funnel chart metrics
-  governanceMetric.otterClamVlPenPercentOwned = percentVlPenOwned
-  governanceMetric.otterClamVeDystPercentOwned = percentVeDystWeight
-
-  // QiDao metrics
-  governanceMetric.qiDaoVeDystAmt = qiDaoVeDystAmt
-
-  log.debug('Governance Metrics for date {}: OtterClam vlPen owned%: {}, OtterClam equivalent veDYST owned%: {}', [
-    transaction.timestamp.toString(),
-    percentVlPenOwned.toString(),
-    percentVeDystWeight.toString(),
-  ])
-
-  governanceMetric.save()
 }
 
 export function loadOrCreateVotePositionSingleton(): VotePosition {

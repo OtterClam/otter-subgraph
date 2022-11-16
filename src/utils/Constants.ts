@@ -5,6 +5,7 @@ export const UNI_CLAM_MAI_PAIR = Address.fromString('0x1581802317f32A26650051094
 export const TREASURY_ADDRESS = Address.fromString('0x8ce47D56EAa1299d3e06FF3E04637449fFb01C9C')
 export const OTTER_DEPLOYER = Address.fromString('0x63b0fb7fe68342afad3d63ef743de4a74cdf462b')
 export const DAO_WALLET = Address.fromString('0x929a27c46041196e1a49c7b459d63ec9a20cd879')
+export const CLAM_WALLET = Address.fromString('0x79428f0e6B83b099b76d6ffBA51a35C4F5D4c7De')
 
 export const CLAM_ERC20 = Address.fromString('0xC250e9987A032ACAC293d838726C511E6E1C029d')
 export const SCLAM_ERC20 = Address.fromString('0xAAc144Dc08cE39Ed92182dd85ded60E5000C9e67')
@@ -127,6 +128,7 @@ export const MAI_USDC_INVESTMENT_STRATEGY = Address.fromString('0x31e79E57fE7287
 export const QI_MATIC_INVESTMENT_STRATEGY = Address.fromString('0x69f6c4Fa150F9F0b3037612CF8FadDAeDbd46Bb8')
 export const QI_FARM_V3 = Address.fromString('0xFFD2AA58Cca3A44120aaA42CEA2852348A9c2eA6')
 export const QI_FARM_CHANGE_BLOCK = BigInt.fromI32(31831179)
+export const QI_FARM_ARRAKIS_BLOCK = BigInt.fromI32(35620390)
 
 export const USDPLUS_STMATIC_PENROSE_USER_PROXY = Address.fromString('0xeFc4947BBBecDAd9b83BCebC7485d7c120DB699f')
 export const MAI_STMATIC_BLOCK = BigInt.fromI32(32213139)

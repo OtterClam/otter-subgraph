@@ -1,10 +1,9 @@
 import { Investment, ClaimReward, Transaction } from '../../generated/schema'
 import { toDecimal } from '../utils/Decimals'
 import { BigDecimal, BigInt, log } from '@graphprotocol/graph-ts'
-import { MAI_USDC_INVESTMENT_STRATEGY, QI_FARM_V3, UNI_MAI_USDC_PAIR } from '../utils/Constants'
+import { MAI_USDC_INVESTMENT_STRATEGY } from '../utils/Constants'
 import { InvestmentInterface, loadOrCreateInvestment } from '.'
-import { QiFarmV3 } from '../../generated/OtterClamERC20V2/QiFarmV3'
-import { getUniPairUSD } from '../utils/Price'
+import { IStrategy } from '../../generated/MaiUsdcStrategy/IStrategy'
 
 export class QiDaoUsdcMaiInvestment implements InvestmentInterface {
   public investment!: Investment
@@ -33,10 +32,10 @@ export class QiDaoUsdcMaiInvestment implements InvestmentInterface {
 
   netAssetValue(): BigDecimal {
     if (this.active) {
-      let farm = QiFarmV3.bind(QI_FARM_V3)
-      //pid 0 == mai/usdc
-      let deposited = farm.deposited(BigInt.zero(), MAI_USDC_INVESTMENT_STRATEGY)
-      return getUniPairUSD(this.currentBlock, deposited, UNI_MAI_USDC_PAIR)
+      let tryNAV = IStrategy.bind(MAI_USDC_INVESTMENT_STRATEGY).try_netAssetValue()
+      let netAssetVal = tryNAV.reverted ? BigInt.zero() : tryNAV.value
+
+      return toDecimal(netAssetVal, 6)
     }
     return BigDecimal.zero()
   }

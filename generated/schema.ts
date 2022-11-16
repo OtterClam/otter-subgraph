@@ -223,10 +223,6 @@ export class ProtocolMetric extends Entity {
       Value.fromBigDecimal(BigDecimal.zero())
     );
     this.set(
-      "treasuryMaiUsdcMarketValue",
-      Value.fromBigDecimal(BigDecimal.zero())
-    );
-    this.set(
       "treasuryMaiUsdcQiInvestmentValue",
       Value.fromBigDecimal(BigDecimal.zero())
     );
@@ -338,13 +334,10 @@ export class ProtocolMetric extends Entity {
       "treasuryQuickswapV3MaiUsdtStrategyMarketValue",
       Value.fromBigDecimal(BigDecimal.zero())
     );
+    this.set("treasuryClamValue", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("totalBurnedClam", Value.fromBigDecimal(BigDecimal.zero()));
     this.set(
       "totalBurnedClamMarketValue",
-      Value.fromBigDecimal(BigDecimal.zero())
-    );
-    this.set(
-      "totalClamUsdPlusRebaseValue",
       Value.fromBigDecimal(BigDecimal.zero())
     );
   }
@@ -445,15 +438,6 @@ export class ProtocolMetric extends Entity {
 
   set treasuryMarketValueWithoutClam(value: BigDecimal) {
     this.set("treasuryMarketValueWithoutClam", Value.fromBigDecimal(value));
-  }
-
-  get treasuryMaiUsdcMarketValue(): BigDecimal {
-    let value = this.get("treasuryMaiUsdcMarketValue");
-    return value!.toBigDecimal();
-  }
-
-  set treasuryMaiUsdcMarketValue(value: BigDecimal) {
-    this.set("treasuryMaiUsdcMarketValue", Value.fromBigDecimal(value));
   }
 
   get treasuryMaiUsdcQiInvestmentValue(): BigDecimal {
@@ -777,6 +761,15 @@ export class ProtocolMetric extends Entity {
     );
   }
 
+  get treasuryClamValue(): BigDecimal {
+    let value = this.get("treasuryClamValue");
+    return value!.toBigDecimal();
+  }
+
+  set treasuryClamValue(value: BigDecimal) {
+    this.set("treasuryClamValue", Value.fromBigDecimal(value));
+  }
+
   get totalBurnedClam(): BigDecimal {
     let value = this.get("totalBurnedClam");
     return value!.toBigDecimal();
@@ -793,15 +786,6 @@ export class ProtocolMetric extends Entity {
 
   set totalBurnedClamMarketValue(value: BigDecimal) {
     this.set("totalBurnedClamMarketValue", Value.fromBigDecimal(value));
-  }
-
-  get totalClamUsdPlusRebaseValue(): BigDecimal {
-    let value = this.get("totalClamUsdPlusRebaseValue");
-    return value!.toBigDecimal();
-  }
-
-  set totalClamUsdPlusRebaseValue(value: BigDecimal) {
-    this.set("totalClamUsdPlusRebaseValue", Value.fromBigDecimal(value));
   }
 }
 

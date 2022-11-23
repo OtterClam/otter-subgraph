@@ -624,6 +624,7 @@ function setTreasuryAssetMarketValues(transaction: Transaction, protocolMetric: 
   protocolMetric.treasurySandMarketValue = sandboxLandStakeValue
   protocolMetric.treasuryQuickswapV3MaiUsdtStrategyMarketValue = quickV3MaiUsdtValue
   protocolMetric.treasuryDystopiaPairUsdcClamMarketValue = clamUsdcDystValue
+  protocolMetric.treasuryClamValue = clamValue
 
   return protocolMetric
 }

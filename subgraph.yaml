@@ -129,6 +129,8 @@ dataSources:
       eventHandlers:
         - event: BuyProduct(indexed uint256,indexed address,indexed address,uint256,uint256)
           handler: handleBuyProduct
+        - event: BuyFish(uint256)
+          handler: handleBuyFish
       file: ./src/OttopiaStore.ts
 
   - kind: ethereum/contract
@@ -311,6 +313,52 @@ dataSources:
       address: '0x582331EB734D2d81e29Eb54A9890AEED1627e2C2'
       abi: PenroseMultiRewards
       startBlock: 31069971
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - Transaction
+        - Transfer
+        - TreasuryRevenue
+        - ClaimReward
+      abis:
+        - name: PenroseMultiRewards
+          file: ./abis/PenroseMultiRewards.json
+        - name: Pen
+          file: ./abis/Pen.json
+        - name: Dyst
+          file: ./abis/Dyst.json
+        #====== getPrice() required contracts======
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: UniswapV2Pair
+          file: ./abis/UniswapV2Pair.json
+        - name: AggregatorV3InterfaceABI
+          file: ./abis/AggregatorV3InterfaceABI.json
+        - name: DystPair
+          file: ./abis/DystPair.json
+        - name: DystPairFactory
+          file: ./abis/DystPairFactory.json
+        - name: DystRouter
+          file: ./abis/DystRouter.json
+        - name: UniswapV2Router02
+          file: ./abis/UniswapV2Router02.json
+        - name: ArrakisVault
+          file: ./abis/ArrakisVault.json
+      eventHandlers:
+        - event: RewardPaid(indexed address,indexed address,uint256)
+          handler: handleRewardPaid
+      file: ./src/PenroseMultiRewards.ts
+
+      
+  - kind: ethereum/contract
+    name: PenroseClamUsdcRewards
+    network: matic
+    source:
+      address: '0xa338758e576a445369Cda008Fb86122E58DD7aBe'
+      abi: PenroseMultiRewards
+      startBlock: 35386241
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5

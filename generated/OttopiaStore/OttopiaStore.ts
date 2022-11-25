@@ -102,6 +102,24 @@ export class CreateProduct__Params {
   }
 }
 
+export class BuyFish extends ethereum.Event {
+  get params(): BuyFish__Params {
+    return new BuyFish__Params(this);
+  }
+}
+
+export class BuyFish__Params {
+  _event: BuyFish;
+
+  constructor(event: BuyFish) {
+    this._event = event;
+  }
+
+  get clamAmount(): BigInt {
+    return this._event.parameters[0].value.toBigInt();
+  }
+}
+
 export class DeleteProduct extends ethereum.Event {
   get params(): DeleteProduct__Params {
     return new DeleteProduct__Params(this);

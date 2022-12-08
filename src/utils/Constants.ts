@@ -158,3 +158,6 @@ export const QUICKSWAPV3_MAI_USDT_STRATEGY = Address.fromString('0xCa2dFfB466B65
 
 export const SANDBOX_LAND_STAKING = Address.fromString('0xD3A9CAa25393765c05ce9f332B5E33b5E33D8B8F')
 export const SANDBOX_LAND_STAKING_START_BLOCK = BigInt.fromI32(34080313)
+
+export const OHM_NAV_REPORTER = Address.fromString('0x2F5bd83457de9cdE4052d04a76d4EA29316e6664')
+// export const GAINS_DAI_VAULT = Address.fromString('0xd7052EC0Fe1fe25b20B7D65F6f3d490fCE58804f')

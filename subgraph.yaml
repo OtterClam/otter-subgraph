@@ -351,7 +351,6 @@ dataSources:
           handler: handleRewardPaid
       file: ./src/PenroseMultiRewards.ts
 
-      
   - kind: ethereum/contract
     name: PenroseClamUsdcRewards
     network: matic
@@ -1084,6 +1083,8 @@ dataSources:
           file: ./abis/PenrosePartnerRewards.json
         - name: PenroseMultiRewards
           file: ./abis/PenroseMultiRewards.json
+        - name: OHMNavReporter
+          file: ./abis/OHMNavReporter.json
         #====== getPrice() required contracts======
         - name: ERC20
           file: ./abis/ERC20.json
@@ -1285,6 +1286,8 @@ dataSources:
           file: ./abis/UniswapV2Router02.json
         - name: ArrakisVault
           file: ./abis/ArrakisVault.json
+        - name: OHMNavReporter
+          file: ./abis/OHMNavReporter.json
       eventHandlers:
         - event: Transfer(indexed address,indexed address,uint256)
           handler: handleTransfer

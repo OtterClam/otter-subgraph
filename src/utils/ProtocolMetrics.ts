@@ -119,6 +119,7 @@ import { PenroseHedgeLpStrategy } from '../../generated/OtterClamERC20V2/Penrose
 import { DystPair } from '../../generated/OtterClamERC20V2/DystPair'
 import { QuickswapV3MaiUsdtInvestment } from '../Investments/QuickswapV3MaiUsdt'
 import { QiDaoUsdcMaiInvestment } from '../Investments/QiDaoUsdcMai'
+import { OHMInvestment } from '../Investments/OHM'
 
 export function loadOrCreateProtocolMetric(timestamp: BigInt): ProtocolMetric {
   let dayTimestamp = dayFromTimestamp(timestamp)
@@ -543,6 +544,8 @@ function setTreasuryAssetMarketValues(transaction: Transaction, protocolMetric: 
   let clamValue = BigDecimal.zero()
   clamValue = toDecimal(ERC20.bind(CLAM_ERC20).balanceOf(CLAM_WALLET), 9).times(getClamUsdRate(transaction.blockNumber))
 
+  let ohmValue = new OHMInvestment(transaction).netAssetValue()
+
   let stableValueDecimal = maiBalance
     .plus(daiBalance)
     .plus(maiUsdcQiInvestmentValueDecimal)
@@ -588,6 +591,7 @@ function setTreasuryAssetMarketValues(transaction: Transaction, protocolMetric: 
     .plus(vlPenMarketValue)
     .plus(penDystMarketValue)
     .plus(sandboxLandStakeValue)
+    .plus(ohmValue)
 
   let mv = stableValueDecimal.plus(lpValue_Clam).plus(tokenValues)
   let mv_noClam = stableValueDecimal.plus(lpValue_noClam).plus(tokenValues)
@@ -625,6 +629,7 @@ function setTreasuryAssetMarketValues(transaction: Transaction, protocolMetric: 
   protocolMetric.treasuryQuickswapV3MaiUsdtStrategyMarketValue = quickV3MaiUsdtValue
   protocolMetric.treasuryDystopiaPairUsdcClamMarketValue = clamUsdcDystValue
   protocolMetric.treasuryClamValue = clamValue
+  protocolMetric.treasuryOHMStrategyMarketValue = ohmValue
 
   return protocolMetric
 }

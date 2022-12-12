@@ -120,6 +120,7 @@ import { DystPair } from '../../generated/OtterClamERC20V2/DystPair'
 import { QuickswapV3MaiUsdtInvestment } from '../Investments/QuickswapV3MaiUsdt'
 import { QiDaoUsdcMaiInvestment } from '../Investments/QiDaoUsdcMai'
 import { OHMInvestment } from '../Investments/OHM'
+import { WMEMOInvestment } from '../Investments/wMEMO'
 
 export function loadOrCreateProtocolMetric(timestamp: BigInt): ProtocolMetric {
   let dayTimestamp = dayFromTimestamp(timestamp)
@@ -545,6 +546,7 @@ function setTreasuryAssetMarketValues(transaction: Transaction, protocolMetric: 
   clamValue = toDecimal(ERC20.bind(CLAM_ERC20).balanceOf(CLAM_WALLET), 9).times(getClamUsdRate(transaction.blockNumber))
 
   let ohmValue = new OHMInvestment(transaction).netAssetValue()
+  let wMemoValue = new WMEMOInvestment(transaction).netAssetValue()
 
   let stableValueDecimal = maiBalance
     .plus(daiBalance)
@@ -592,6 +594,7 @@ function setTreasuryAssetMarketValues(transaction: Transaction, protocolMetric: 
     .plus(penDystMarketValue)
     .plus(sandboxLandStakeValue)
     .plus(ohmValue)
+    .plus(wMemoValue)
 
   let mv = stableValueDecimal.plus(lpValue_Clam).plus(tokenValues)
   let mv_noClam = stableValueDecimal.plus(lpValue_noClam).plus(tokenValues)
@@ -630,6 +633,7 @@ function setTreasuryAssetMarketValues(transaction: Transaction, protocolMetric: 
   protocolMetric.treasuryDystopiaPairUsdcClamMarketValue = clamUsdcDystValue
   protocolMetric.treasuryClamValue = clamValue
   protocolMetric.treasuryOHMStrategyMarketValue = ohmValue
+  protocolMetric.treasuryWMEMOStrategyMarketValue = wMemoValue
 
   return protocolMetric
 }

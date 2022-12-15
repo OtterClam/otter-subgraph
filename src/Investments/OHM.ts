@@ -39,5 +39,14 @@ export class OHMInvestment implements InvestmentInterface {
     return BigDecimal.zero()
   }
 
+  usdcValue(): BigDecimal {
+    if (this.active) {
+      let tryUsdc = OHMNavReporter.bind(OHM_NAV_REPORTER).try_usdcBalance()
+      let usdcValue = tryUsdc.reverted ? BigInt.zero() : tryUsdc.value
+      return toDecimal(usdcValue, 6)
+    }
+    return BigDecimal.zero()
+  }
+
   addRevenue(claim: ClaimReward): void {}
 }

@@ -657,6 +657,21 @@ export class OHMNavReporter extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toAddress());
   }
 
+  usdcBalance(): BigInt {
+    let result = super.call("usdcBalance", "usdcBalance():(uint256)", []);
+
+    return result[0].toBigInt();
+  }
+
+  try_usdcBalance(): ethereum.CallResult<BigInt> {
+    let result = super.tryCall("usdcBalance", "usdcBalance():(uint256)", []);
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
   withdraw(token_: Address, amount_: BigInt): BigInt {
     let result = super.call("withdraw", "withdraw(address,uint256):(uint256)", [
       ethereum.Value.fromAddress(token_),
@@ -962,6 +977,10 @@ export class UpdateBalanceCall__Inputs {
 
   get balance_(): BigInt {
     return this._call.inputValues[0].value.toBigInt();
+  }
+
+  get usdcBalance_(): BigInt {
+    return this._call.inputValues[1].value.toBigInt();
   }
 }
 

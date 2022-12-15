@@ -545,7 +545,9 @@ function setTreasuryAssetMarketValues(transaction: Transaction, protocolMetric: 
   let clamValue = BigDecimal.zero()
   clamValue = toDecimal(ERC20.bind(CLAM_ERC20).balanceOf(CLAM_WALLET), 9).times(getClamUsdRate(transaction.blockNumber))
 
-  let ohmValue = new OHMInvestment(transaction).netAssetValue()
+  let ohmInvestment = new OHMInvestment(transaction)
+  let usdcValue = ohmInvestment.usdcValue()
+  let ohmValue = ohmInvestment.netAssetValue()
   let wMemoValue = new WMEMOInvestment(transaction).netAssetValue()
 
   let stableValueDecimal = maiBalance
@@ -554,6 +556,7 @@ function setTreasuryAssetMarketValues(transaction: Transaction, protocolMetric: 
     .plus(usdcTusdValue)
     .plus(usdplusUsdcValue)
     .plus(usdPlusMarketValue)
+    .plus(usdcValue)
 
   let lpValue = qiWmaticMarketValue
     .plus(qiWmaticQiInvestmentMarketValue)
@@ -634,6 +637,7 @@ function setTreasuryAssetMarketValues(transaction: Transaction, protocolMetric: 
   protocolMetric.treasuryClamValue = clamValue
   protocolMetric.treasuryOHMStrategyMarketValue = ohmValue
   protocolMetric.treasuryWMEMOStrategyMarketValue = wMemoValue
+  protocolMetric.treasuryUsdcValue = usdcValue
 
   return protocolMetric
 }

@@ -1374,245 +1374,6 @@ export class TreasuryRevenue extends Entity {
   }
 }
 
-export class Vote extends Entity {
-  constructor(id: string) {
-    super();
-    this.set("id", Value.fromString(id));
-
-    this.set("timestamp", Value.fromBigInt(BigInt.zero()));
-    this.set("vote", Value.fromBigDecimal(BigDecimal.zero()));
-  }
-
-  save(): void {
-    let id = this.get("id");
-    assert(id != null, "Cannot save Vote entity without an ID");
-    if (id) {
-      assert(
-        id.kind == ValueKind.STRING,
-        "Cannot save Vote entity with non-string ID. " +
-          'Considering using .toHex() to convert the "id" to a string.'
-      );
-      store.set("Vote", id.toString(), this);
-    }
-  }
-
-  static load(id: string): Vote | null {
-    return changetype<Vote | null>(store.get("Vote", id));
-  }
-
-  get id(): string {
-    let value = this.get("id");
-    return value!.toString();
-  }
-
-  set id(value: string) {
-    this.set("id", Value.fromString(value));
-  }
-
-  get timestamp(): BigInt {
-    let value = this.get("timestamp");
-    return value!.toBigInt();
-  }
-
-  set timestamp(value: BigInt) {
-    this.set("timestamp", Value.fromBigInt(value));
-  }
-
-  get vote(): BigDecimal {
-    let value = this.get("vote");
-    return value!.toBigDecimal();
-  }
-
-  set vote(value: BigDecimal) {
-    this.set("vote", Value.fromBigDecimal(value));
-  }
-}
-
-export class VotePosition extends Entity {
-  constructor(id: string) {
-    super();
-    this.set("id", Value.fromString(id));
-  }
-
-  save(): void {
-    let id = this.get("id");
-    assert(id != null, "Cannot save VotePosition entity without an ID");
-    if (id) {
-      assert(
-        id.kind == ValueKind.STRING,
-        "Cannot save VotePosition entity with non-string ID. " +
-          'Considering using .toHex() to convert the "id" to a string.'
-      );
-      store.set("VotePosition", id.toString(), this);
-    }
-  }
-
-  static load(id: string): VotePosition | null {
-    return changetype<VotePosition | null>(store.get("VotePosition", id));
-  }
-
-  get id(): string {
-    let value = this.get("id");
-    return value!.toString();
-  }
-
-  set id(value: string) {
-    this.set("id", Value.fromString(value));
-  }
-
-  get votes(): Array<string> | null {
-    let value = this.get("votes");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toStringArray();
-    }
-  }
-
-  set votes(value: Array<string> | null) {
-    if (!value) {
-      this.unset("votes");
-    } else {
-      this.set("votes", Value.fromStringArray(<Array<string>>value));
-    }
-  }
-}
-
-export class GovernanceMetric extends Entity {
-  constructor(id: string) {
-    super();
-    this.set("id", Value.fromString(id));
-
-    this.set("timestamp", Value.fromBigInt(BigInt.zero()));
-    this.set("qiDaoVeDystAmt", Value.fromBigDecimal(BigDecimal.zero()));
-    this.set("dystMarketCap", Value.fromBigDecimal(BigDecimal.zero()));
-    this.set("veDystMarketCap", Value.fromBigDecimal(BigDecimal.zero()));
-    this.set("penDystMarketCap", Value.fromBigDecimal(BigDecimal.zero()));
-    this.set("vlPenMarketCap", Value.fromBigDecimal(BigDecimal.zero()));
-    this.set(
-      "otterClamVlPenMarketCap",
-      Value.fromBigDecimal(BigDecimal.zero())
-    );
-    this.set(
-      "otterClamVlPenPercentOwned",
-      Value.fromBigDecimal(BigDecimal.zero())
-    );
-    this.set(
-      "otterClamVeDystPercentOwned",
-      Value.fromBigDecimal(BigDecimal.zero())
-    );
-  }
-
-  save(): void {
-    let id = this.get("id");
-    assert(id != null, "Cannot save GovernanceMetric entity without an ID");
-    if (id) {
-      assert(
-        id.kind == ValueKind.STRING,
-        "Cannot save GovernanceMetric entity with non-string ID. " +
-          'Considering using .toHex() to convert the "id" to a string.'
-      );
-      store.set("GovernanceMetric", id.toString(), this);
-    }
-  }
-
-  static load(id: string): GovernanceMetric | null {
-    return changetype<GovernanceMetric | null>(
-      store.get("GovernanceMetric", id)
-    );
-  }
-
-  get id(): string {
-    let value = this.get("id");
-    return value!.toString();
-  }
-
-  set id(value: string) {
-    this.set("id", Value.fromString(value));
-  }
-
-  get timestamp(): BigInt {
-    let value = this.get("timestamp");
-    return value!.toBigInt();
-  }
-
-  set timestamp(value: BigInt) {
-    this.set("timestamp", Value.fromBigInt(value));
-  }
-
-  get qiDaoVeDystAmt(): BigDecimal {
-    let value = this.get("qiDaoVeDystAmt");
-    return value!.toBigDecimal();
-  }
-
-  set qiDaoVeDystAmt(value: BigDecimal) {
-    this.set("qiDaoVeDystAmt", Value.fromBigDecimal(value));
-  }
-
-  get dystMarketCap(): BigDecimal {
-    let value = this.get("dystMarketCap");
-    return value!.toBigDecimal();
-  }
-
-  set dystMarketCap(value: BigDecimal) {
-    this.set("dystMarketCap", Value.fromBigDecimal(value));
-  }
-
-  get veDystMarketCap(): BigDecimal {
-    let value = this.get("veDystMarketCap");
-    return value!.toBigDecimal();
-  }
-
-  set veDystMarketCap(value: BigDecimal) {
-    this.set("veDystMarketCap", Value.fromBigDecimal(value));
-  }
-
-  get penDystMarketCap(): BigDecimal {
-    let value = this.get("penDystMarketCap");
-    return value!.toBigDecimal();
-  }
-
-  set penDystMarketCap(value: BigDecimal) {
-    this.set("penDystMarketCap", Value.fromBigDecimal(value));
-  }
-
-  get vlPenMarketCap(): BigDecimal {
-    let value = this.get("vlPenMarketCap");
-    return value!.toBigDecimal();
-  }
-
-  set vlPenMarketCap(value: BigDecimal) {
-    this.set("vlPenMarketCap", Value.fromBigDecimal(value));
-  }
-
-  get otterClamVlPenMarketCap(): BigDecimal {
-    let value = this.get("otterClamVlPenMarketCap");
-    return value!.toBigDecimal();
-  }
-
-  set otterClamVlPenMarketCap(value: BigDecimal) {
-    this.set("otterClamVlPenMarketCap", Value.fromBigDecimal(value));
-  }
-
-  get otterClamVlPenPercentOwned(): BigDecimal {
-    let value = this.get("otterClamVlPenPercentOwned");
-    return value!.toBigDecimal();
-  }
-
-  set otterClamVlPenPercentOwned(value: BigDecimal) {
-    this.set("otterClamVlPenPercentOwned", Value.fromBigDecimal(value));
-  }
-
-  get otterClamVeDystPercentOwned(): BigDecimal {
-    let value = this.get("otterClamVeDystPercentOwned");
-    return value!.toBigDecimal();
-  }
-
-  set otterClamVeDystPercentOwned(value: BigDecimal) {
-    this.set("otterClamVeDystPercentOwned", Value.fromBigDecimal(value));
-  }
-}
-
 export class CumulativeValues extends Entity {
   constructor(id: string) {
     super();
@@ -1852,7 +1613,7 @@ export class BuyProduct extends Entity {
     super();
     this.set("id", Value.fromString(id));
 
-    this.set("product_id", Value.fromBigInt(BigInt.zero()));
+    this.set("productId", Value.fromBigInt(BigInt.zero()));
     this.set("price", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("amount", Value.fromBigInt(BigInt.zero()));
     this.set("totalClam", Value.fromBigDecimal(BigDecimal.zero()));
@@ -1884,13 +1645,13 @@ export class BuyProduct extends Entity {
     this.set("id", Value.fromString(value));
   }
 
-  get product_id(): BigInt {
-    let value = this.get("product_id");
+  get productId(): BigInt {
+    let value = this.get("productId");
     return value!.toBigInt();
   }
 
-  set product_id(value: BigInt) {
-    this.set("product_id", Value.fromBigInt(value));
+  set productId(value: BigInt) {
+    this.set("productId", Value.fromBigInt(value));
   }
 
   get price(): BigDecimal {
@@ -1918,6 +1679,50 @@ export class BuyProduct extends Entity {
 
   set totalClam(value: BigDecimal) {
     this.set("totalClam", Value.fromBigDecimal(value));
+  }
+}
+
+export class BuyProductId extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+
+    this.set("productIds", Value.fromBigIntArray(new Array(0)));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save BuyProductId entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        "Cannot save BuyProductId entity with non-string ID. " +
+          'Considering using .toHex() to convert the "id" to a string.'
+      );
+      store.set("BuyProductId", id.toString(), this);
+    }
+  }
+
+  static load(id: string): BuyProductId | null {
+    return changetype<BuyProductId | null>(store.get("BuyProductId", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get productIds(): Array<BigInt> {
+    let value = this.get("productIds");
+    return value!.toBigIntArray();
+  }
+
+  set productIds(value: Array<BigInt>) {
+    this.set("productIds", Value.fromBigIntArray(value));
   }
 }
 

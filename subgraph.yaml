@@ -17,9 +17,6 @@ dataSources:
         - Transaction
         - Transfer
         - TreasuryRevenue
-        - Vote
-        - VotePosition
-        - GovernanceMetric
         - TotalBurnedClam
         - Harvest
         - HarvestStaking

@@ -1,10 +1,9 @@
 import { BigDecimal, BigInt, log } from '@graphprotocol/graph-ts'
 import { Revive } from '../generated/Adventure/Adventure'
-import { toDecimal } from './utils/Decimals'
 import { getClamUsdRate } from './utils/Price'
 import { loadOrCreateTransaction } from './utils/Transactions'
 import { loadOrCreateTreasuryRevenue, setTreasuryRevenueTotals } from './utils/TreasuryRevenue'
-import { BuyProduct } from '../generated/schema'
+import { BuyProduct, BuyProductId } from '../generated/schema'
 
 export function handleRevive(event: Revive): void {
   let transaction = loadOrCreateTransaction(event.transaction, event.block)
@@ -14,12 +13,17 @@ export function handleRevive(event: Revive): void {
   //Save the buy event
   let entity = new BuyProduct(transaction.id)
   // Starting Adventure IDs from 10k
-  entity.product_id = BigInt.fromString('100000')
+  let productId = BigInt.fromString('100000')
+  entity.productId = productId
   entity.price = clamPrice
   entity.amount = BigInt.fromI32(1)
   entity.totalClam = BigDecimal.fromString('1')
-
   entity.save()
+
+  // Add Product to IDs list
+  let productIds = loadOrCreateBuyProductIds()
+  productIds.productIds.push(productId)
+  productIds.save()
 
   //10% of Ottopia CLAM is burned
   //40% of Ottopia CLAM is DAO revenue
@@ -41,4 +45,14 @@ export function handleRevive(event: Revive): void {
   revenue = setTreasuryRevenueTotals(revenue)
 
   revenue.save()
+}
+
+export function loadOrCreateBuyProductIds(): BuyProductId {
+  let prodIds = BuyProductId.load('1')
+  if (prodIds == null) {
+    prodIds = new BuyProductId('1')
+    prodIds.productIds = []
+    prodIds.save()
+  }
+  return prodIds
 }

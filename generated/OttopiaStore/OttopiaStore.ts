@@ -84,6 +84,44 @@ export class BuyProduct__Params {
   }
 }
 
+export class BuyItem extends ethereum.Event {
+  get params(): BuyItem__Params {
+    return new BuyItem__Params(this);
+  }
+}
+
+export class BuyItem__Params {
+  _event: BuyItem;
+
+  constructor(event: BuyItem) {
+    this._event = event;
+  }
+
+  get buyer(): Address {
+    return this._event.parameters[0].value.toAddress();
+  }
+
+  get reciever(): Address {
+    return this._event.parameters[1].value.toAddress();
+  }
+
+  get itemId(): BigInt {
+    return this._event.parameters[2].value.toBigInt();
+  }
+
+  get amount(): BigInt {
+    return this._event.parameters[3].value.toBigInt();
+  }
+
+  get token(): Address {
+    return this._event.parameters[4].value.toAddress();
+  }
+
+  get price(): BigInt {
+    return this._event.parameters[5].value.toBigInt();
+  }
+}
+
 export class CreateProduct extends ethereum.Event {
   get params(): CreateProduct__Params {
     return new CreateProduct__Params(this);

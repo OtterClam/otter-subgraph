@@ -124,30 +124,6 @@ type TreasuryRevenue @entity {
   totalRevenueMarketValue: BigDecimal!
 }
 
-type Vote @entity {
-  id: ID! #lp token address
-  timestamp: BigInt!
-  vote: BigDecimal!
-}
-
-type VotePosition @entity {
-  id: ID!
-  votes: [Vote!]
-}
-
-type GovernanceMetric @entity {
-  id: ID!
-  timestamp: BigInt!
-  qiDaoVeDystAmt: BigDecimal!
-  dystMarketCap: BigDecimal!
-  veDystMarketCap: BigDecimal!
-  penDystMarketCap: BigDecimal!
-  vlPenMarketCap: BigDecimal!
-  otterClamVlPenMarketCap: BigDecimal!
-  otterClamVlPenPercentOwned: BigDecimal!
-  otterClamVeDystPercentOwned: BigDecimal!
-}
-
 type CumulativeValues @entity {
   id: ID! #always equals 'CumulativeValues'
   rewardPayoutMarketValue: BigDecimal!
@@ -175,10 +151,15 @@ type PearlBankMetric @entity {
 
 type BuyProduct @entity {
   id: ID!
-  product_id: BigInt!
+  productId: BigInt!
   price: BigDecimal!
   amount: BigInt!
   totalClam: BigDecimal!
+}
+
+type BuyProductId @entity {
+  id: ID!
+  productIds: [BigInt!]!
 }
 
 """
@@ -210,9 +191,6 @@ type Investment @entity {
   grossApr: BigDecimal!
 
   netRevenue: BigDecimal!
-  # no, NET POSITION CHANGE PER DAY
-  # but why? just do data[0] - data[-1]
-  # PnL = NAV1 - NAV2 + Gross Revenue (*30% ?)
   netApr: BigDecimal!
 
   rewardTokens: [ClaimReward!]!

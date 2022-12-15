@@ -4,6 +4,7 @@ import { getClamUsdRate } from './utils/Price'
 import { loadOrCreateTransaction } from './utils/Transactions'
 import { loadOrCreateTreasuryRevenue } from './utils/TreasuryRevenue'
 import { BuyProduct } from '../generated/schema'
+import { loadOrCreateBuyProductIds } from './Adventure'
 
 export function handleOttoMinted(mint: OttoMinted): void {
   let transaction = loadOrCreateTransaction(mint.transaction, mint.block)
@@ -12,12 +13,18 @@ export function handleOttoMinted(mint: OttoMinted): void {
   let clamPaid = mint.params.quantity.toBigDecimal().times(clamPerPortal)
 
   //track the Buy event for NFT sales feed
+  let productId = BigInt.fromI32(-1)
   let buy = new BuyProduct(transaction.id)
   buy.price = clamPerPortal
-  buy.product_id = BigInt.fromI32(-1)
+  buy.productId = productId
   buy.totalClam = clamPaid
   buy.amount = mint.params.quantity
   buy.save()
+
+  // Add Product to IDs list
+  let productIds = loadOrCreateBuyProductIds()
+  productIds.productIds.push(productId)
+  productIds.save()
 
   //10% of Ottopia CLAM is burned
   //40% of Ottopia CLAM is DAO revenue

@@ -13,7 +13,7 @@ import { UniswapV2Pair } from '../../generated/OtterClamERC20V2/UniswapV2Pair'
 import { PenDystRewards } from '../../generated/OtterClamERC20V2/PenDystRewards'
 import { PenrosePartnerRewards } from '../../generated/OtterClamERC20V2/PenrosePartnerRewards'
 import { PenLockerV2 } from '../../generated/OtterClamERC20V2/PenLockerV2'
-import { ProtocolMetric, Transaction, VotePosition, Vote, GovernanceMetric } from '../../generated/schema'
+import { ProtocolMetric, Transaction } from '../../generated/schema'
 import {
   CIRCULATING_SUPPLY_CONTRACT,
   CIRCULATING_SUPPLY_CONTRACT_BLOCK,
@@ -77,7 +77,6 @@ import {
   MAI_STMATIC_INVESTMENT_STRATEGY,
   ARRAKIS_MAI_STMATIC_PAIR,
   USDPLUS_INVESTMENT_STRATEGY,
-  GOVERNANCE_START_BLOCK,
   DYSTOPIA_veDYST_MATIC_AIRDROP_ID,
   PENROSE_HEDGED_MATIC_STRATEGY,
   PENROSE_HEDGE_START_BLOCK,
@@ -132,19 +131,6 @@ export function loadOrCreateProtocolMetric(timestamp: BigInt): ProtocolMetric {
     protocolMetric.save()
   }
   return protocolMetric as ProtocolMetric
-}
-
-export function loadOrCreateGovernanceMetric(timestamp: BigInt): GovernanceMetric {
-  let dayTimestamp = dayFromTimestamp(timestamp)
-
-  let governanceMetric = GovernanceMetric.load(dayTimestamp)
-  if (governanceMetric == null) {
-    governanceMetric = new GovernanceMetric(dayTimestamp)
-    governanceMetric.timestamp = timestamp
-
-    governanceMetric.save()
-  }
-  return governanceMetric as GovernanceMetric
 }
 
 function getTotalSupply(): BigDecimal {
@@ -656,14 +642,4 @@ export function updateProtocolMetrics(transaction: Transaction): void {
   pm.totalBurnedClamMarketValue = burns.burnedValueUsd
 
   pm.save()
-}
-
-export function loadOrCreateVotePositionSingleton(): VotePosition {
-  let votes = VotePosition.load('1')
-  if (votes == null) {
-    votes = new VotePosition('1')
-    votes.votes = []
-    votes.save()
-  }
-  return votes
 }

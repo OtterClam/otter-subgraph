@@ -162,3 +162,5 @@ export const SANDBOX_LAND_STAKING_START_BLOCK = BigInt.fromI32(34080313)
 export const OHM_NAV_REPORTER = Address.fromString('0x2F5bd83457de9cdE4052d04a76d4EA29316e6664')
 export const WMEMO_NAV_REPORTER = Address.fromString('0x02B31F35d0548fDCc4B1Dd2f198Dff934C84a642')
 // export const GAINS_DAI_VAULT = Address.fromString('0xd7052EC0Fe1fe25b20B7D65F6f3d490fCE58804f')
+
+export const ARRAKIS_USDC_MAI_STRATEGY = Address.fromString('0xda539d44bb40C20a1D22a884163eB9DAA54b243C')

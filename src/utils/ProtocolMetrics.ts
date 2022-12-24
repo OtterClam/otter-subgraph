@@ -121,6 +121,7 @@ import { QuickswapV3MaiUsdtInvestment } from '../Investments/QuickswapV3MaiUsdt'
 import { QiDaoUsdcMaiInvestment } from '../Investments/QiDaoUsdcMai'
 import { OHMInvestment } from '../Investments/OHM'
 import { WMEMOInvestment } from '../Investments/wMEMO'
+import { ArrakisUsdcMaiInvestment } from '../Investments/ArrakisUsdcMai'
 
 export function loadOrCreateProtocolMetric(timestamp: BigInt): ProtocolMetric {
   let dayTimestamp = dayFromTimestamp(timestamp)
@@ -534,6 +535,8 @@ function setTreasuryAssetMarketValues(transaction: Transaction, protocolMetric: 
 
   let quickV3MaiUsdtValue = new QuickswapV3MaiUsdtInvestment(transaction).netAssetValue()
 
+  let arrakisUsdcMaiVal = new ArrakisUsdcMaiInvestment(transaction).netAssetValue()
+
   // Sandbox
   let sandboxLandStakeValue = BigDecimal.zero()
   if (transaction.blockNumber.gt(SANDBOX_LAND_STAKING_START_BLOCK)) {
@@ -569,6 +572,7 @@ function setTreasuryAssetMarketValues(transaction: Transaction, protocolMetric: 
     //uniV3 & quickswapV3
     .plus(uniV3UsdcMaiValue)
     .plus(quickV3MaiUsdtValue)
+    .plus(arrakisUsdcMaiVal)
 
   let lpValue_noClam = lpValue
     .plus(clamMai_MaiOnlyValue)
@@ -634,6 +638,7 @@ function setTreasuryAssetMarketValues(transaction: Transaction, protocolMetric: 
   protocolMetric.treasuryClamValue = clamValue
   protocolMetric.treasuryOHMStrategyMarketValue = ohmValue
   protocolMetric.treasuryWMEMOStrategyMarketValue = wMemoValue
+  protocolMetric.treasuryArrakisUsdcMaiMarketValue = arrakisUsdcMaiVal
 
   return protocolMetric
 }

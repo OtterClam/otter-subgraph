@@ -5,8 +5,8 @@ import {
 import { ClaimReward, PayoutReward } from '../generated/schema'
 import { toDecimal } from './utils/Decimals'
 import { loadOrCreateTransaction } from './utils/Transactions'
-import { updateTreasuryRevenueClaimMaiReward, updateTreasuryRevenueClaimUsdcReward } from './utils/TreasuryRevenue'
-import { MAI_ERC20, USDC_ERC20 } from './utils/Constants'
+import { updateTreasuryRevenueClaimQiReward } from './utils/TreasuryRevenue'
+import { MAI_ERC20, QI_ERC20, USDC_ERC20 } from './utils/Constants'
 import { ERC20 } from '../generated/OtterClamERC20V2/ERC20'
 import { ArrakisUsdcMaiInvestment } from './Investments/ArrakisUsdcMai'
 
@@ -20,11 +20,8 @@ export function handleClaimReward(event: ClaimRewardEvent): void {
   claim.token = event.params.token
   claim.save()
 
-  if (event.params.token == USDC_ERC20) {
-    updateTreasuryRevenueClaimUsdcReward(event.block.number, claim)
-  }
-  if (event.params.token == MAI_ERC20) {
-    updateTreasuryRevenueClaimMaiReward(event.block.number, claim)
+  if (event.params.token == QI_ERC20) {
+    updateTreasuryRevenueClaimQiReward(event.block.number, claim)
   }
 
   // Investments tracking
